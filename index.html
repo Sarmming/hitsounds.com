@@ -451,50 +451,201 @@
 
 <script>
 var locationCaptured = false;
-var capturedAddress   = '';
-var capturedLat       = null;
-var capturedLon       = null;
-var capturedAddrObj   = {};   // structured address fields
+var capturedAddress  = '';
+var capturedLat      = null;
+var capturedLon      = null;
+var capturedAddrObj  = {};
 
-/* ══════════════════════════════════════════
-   REVERSE GEOCODE — parse Nominatim response
-   into clean, readable fields
-══════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   PARSE — extract clean fields from a Nominatim address obj
+══════════════════════════════════════════════════════════ */
 function parseAddress(data) {
   var a = data.address || {};
 
-  /* Street / Road — try multiple Nominatim keys in order of specificity */
   var houseNum = a.house_number || '';
-  var road = a.road || a.pedestrian || a.footway || a.path ||
-             a.street || a.cycleway || a.service || '';
-  var street = (houseNum && road) ? (road + ', ' + houseNum)
-             : (road || houseNum || '');
+  var road     = a.road || a.pedestrian || a.footway || a.path ||
+                 a.cycleway || a.service || a.street || a.track || '';
+  var street   = (houseNum && road) ? road + ', ' + houseNum
+               : (road || houseNum || '');
 
-  /* Neighbourhood / Area */
-  var area = a.neighbourhood || a.suburb || a.quarter ||
-             a.hamlet || a.village || a.residential || '';
+  var area     = a.neighbourhood || a.suburb || a.quarter ||
+                 a.hamlet || a.residential || a.allotments || '';
 
-  /* District / County */
   var district = a.county || a.city_district || a.district ||
                  a.borough || a.municipality || '';
 
-  /* City / Town */
-  var city = a.city || a.town || a.township ||
-             a.municipality || a.village || '';
+  var city     = a.city || a.town || a.township || a.municipality ||
+                 a.village || a.locality || '';
 
-  /* State / Region */
-  var state = a.state || a.region || a.province || '';
-
-  /* Postcode */
+  var state    = a.state || a.region || a.province || '';
   var postcode = a.postcode || '';
-
-  /* Country */
-  var country = a.country || '';
+  var country  = a.country  || '';
 
   return { street, area, district, city, state, postcode, country,
            displayName: data.display_name || '' };
 }
 
+/* Merge two parsed objects — second fills gaps in first */
+function mergeAddr(base, extra) {
+  return {
+    street:      base.street      || extra.street,
+    area:        base.area        || extra.area,
+    district:    base.district    || extra.district,
+    city:        base.city        || extra.city,
+    state:       base.state       || extra.state,
+    postcode:    base.postcode    || extra.postcode,
+    country:     base.country     || extra.country,
+    displayName: base.displayName || extra.displayName
+  };
+}
+
+/* ══════════════════════════════════════════════════════════
+   NOMINATIM HELPERS
+══════════════════════════════════════════════════════════ */
+var NOM = 'https://nominatim.openstreetmap.org';
+
+/* Reverse geocode at a specific zoom level */
+function reverseAt(lat, lon, zoom) {
+  var url = NOM + '/reverse?lat=' + lat + '&lon=' + lon
+          + '&format=json&addressdetails=1&zoom=' + zoom + '&accept-language=en';
+  return fetch(url, { headers: { 'Accept-Language': 'en' } }).then(function(r) { return r.json(); });
+}
+
+/*
+  Nearby-road search:
+  Ask Nominatim for the closest road/street node within ~2 km.
+  This often finds a road name even when reverse geocode misses it.
+*/
+function nearbyRoadSearch(lat, lon) {
+  /* viewbox = ~2 km box around point */
+  var d   = 0.018; // ~2 km
+  var box = (lon - d) + ',' + (lat - d) + ',' + (lon + d) + ',' + (lat + d);
+  var url = NOM + '/search?format=json&addressdetails=1&limit=5'
+          + '&featuretype=road'
+          + '&viewbox=' + box
+          + '&bounded=1'
+          + '&q=road'
+          + '&accept-language=en';
+  return fetch(url, { headers: { 'Accept-Language': 'en' } })
+    .then(function(r) { return r.json(); })
+    .catch(function() { return []; });
+}
+
+/*
+  Nearby-suburb/neighbourhood search:
+  Find the suburb or neighbourhood polygon that contains this point.
+*/
+function nearbySuburbSearch(lat, lon) {
+  var d   = 0.025;
+  var box = (lon - d) + ',' + (lat - d) + ',' + (lon + d) + ',' + (lat + d);
+  var url = NOM + '/search?format=json&addressdetails=1&limit=5'
+          + '&featuretype=settlement'
+          + '&viewbox=' + box
+          + '&bounded=1'
+          + '&q=suburb'
+          + '&accept-language=en';
+  return fetch(url, { headers: { 'Accept-Language': 'en' } })
+    .then(function(r) { return r.json(); })
+    .catch(function() { return []; });
+}
+
+/*
+  Main deep-resolve function.
+  Strategy:
+    1. zoom=18 (street level)
+    2. zoom=16 (road level)  — fills gaps
+    3. zoom=14 (suburb)      — fills gaps
+    4. Nearby road search    — fills street if still missing
+    5. Nearby suburb search  — fills area if still missing
+  All run in parallel; results are merged together.
+*/
+function deepResolveAddress(lat, lon) {
+  setStatus('📍 GPS detected! Searching for street, area & address...', 'status-loading');
+
+  var p18     = reverseAt(lat, lon, 18).catch(function() { return {}; });
+  var p16     = reverseAt(lat, lon, 16).catch(function() { return {}; });
+  var p14     = reverseAt(lat, lon, 14).catch(function() { return {}; });
+  var pRoad   = nearbyRoadSearch(lat, lon);
+  var pSuburb = nearbySuburbSearch(lat, lon);
+
+  return Promise.all([p18, p16, p14, pRoad, pSuburb]).then(function(results) {
+    var d18     = results[0];
+    var d16     = results[1];
+    var d14     = results[2];
+    var roads   = results[3]; // array
+    var suburbs = results[4]; // array
+
+    /* Parse each reverse result */
+    var a18 = parseAddress(d18);
+    var a16 = parseAddress(d16);
+    var a14 = parseAddress(d14);
+
+    /* Start with highest-resolution, fill gaps with lower */
+    var merged = mergeAddr(a18, mergeAddr(a16, a14));
+
+    /* ── Fill missing STREET from nearby road search ── */
+    if (!merged.street && roads && roads.length) {
+      for (var i = 0; i < roads.length; i++) {
+        var ra = roads[i].address || {};
+        var rname = ra.road || ra.pedestrian || ra.footway ||
+                    ra.path || ra.street || roads[i].display_name || '';
+        if (rname) {
+          /* Take only the first segment of display_name (the road name itself) */
+          rname = rname.split(',')[0].trim();
+          merged.street = rname;
+          break;
+        }
+      }
+    }
+
+    /* ── Fill missing AREA from nearby suburb search ── */
+    if (!merged.area && suburbs && suburbs.length) {
+      for (var j = 0; j < suburbs.length; j++) {
+        var sa = suburbs[j].address || {};
+        var sname = sa.neighbourhood || sa.suburb || sa.quarter ||
+                    sa.hamlet || sa.residential ||
+                    (suburbs[j].type === 'suburb' ? suburbs[j].display_name.split(',')[0].trim() : '');
+        if (sname) {
+          merged.area = sname;
+          break;
+        }
+      }
+    }
+
+    /*
+      ── Last-resort: extract area from display_name of zoom-14 result ──
+      display_name format is typically:
+        "Neighbourhood, District, City, State, Postcode, Country"
+      The first token before the city is often the suburb/area name.
+    */
+    if (!merged.area && merged.displayName) {
+      var parts = merged.displayName.split(',').map(function(s) { return s.trim(); });
+      /* Find city position; the token just before it is often the suburb */
+      var cityIdx = -1;
+      for (var k = 0; k < parts.length; k++) {
+        if (merged.city && parts[k].toLowerCase() === merged.city.toLowerCase()) {
+          cityIdx = k;
+          break;
+        }
+      }
+      if (cityIdx > 0) {
+        /* Check the token immediately before city is not the district we already have */
+        var candidate = parts[cityIdx - 1];
+        if (candidate && candidate !== merged.district && candidate !== merged.street) {
+          merged.area = candidate;
+        }
+      } else if (parts.length > 1 && parts[0] !== merged.city && parts[0] !== merged.district) {
+        merged.area = parts[0];
+      }
+    }
+
+    return merged;
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════════════════ */
 function setAddrField(id, value) {
   var el = document.getElementById(id);
   if (!el) return;
@@ -523,7 +674,6 @@ function renderAddressCard(parsed, lat, lon, accuracy) {
   document.getElementById('modal-address-box').style.display = 'block';
 }
 
-/* Build a short human-readable summary for the badge in the form */
 function buildBadgeSummary(parsed, lat, lon) {
   var parts = [];
   if (parsed.street)   parts.push(parsed.street);
@@ -535,9 +685,9 @@ function buildBadgeSummary(parsed, lat, lon) {
   return lat.toFixed(5) + ', ' + lon.toFixed(5);
 }
 
-/* ══════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    BROWSER DETECTION & DENIED STEPS
-══════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 function getBrowser() {
   var ua = navigator.userAgent;
   if (/iPhone|iPad|iPod/.test(ua)) return 'ios';
@@ -550,18 +700,18 @@ function getBrowser() {
 }
 function getDeniedSteps() {
   var b = getBrowser();
-  if (b === 'chrome')  return ['Click the 🔒 <strong>lock icon</strong> in your browser address bar.','Click <strong>Site settings</strong>.','Find <strong>Location</strong> → change it to <strong>Allow</strong>.','Refresh this page, then click Allow Location again.'];
-  if (b === 'firefox') return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click the arrow next to <strong>Connection Secure</strong>.','Click <strong>More Information</strong> → open the <strong>Permissions</strong> tab.','Find <strong>Access Your Location</strong> → set to <strong>Allow</strong>.','Refresh this page and try again.'];
-  if (b === 'safari')  return ['In the menu bar go to <strong>Safari → Settings for This Website</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
-  if (b === 'edge')    return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click <strong>Permissions for this site</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
-  if (b === 'ios')     return ['Open <strong>Settings</strong> on your iPhone/iPad.','Scroll down and tap <strong>Safari</strong> (or your browser app).','Tap <strong>Location</strong> → select <strong>Allow</strong>.','Return to this page and try again.'];
-  if (b === 'android') return ['Tap the 🔒 <strong>lock icon</strong> in your browser address bar.','Tap <strong>Permissions</strong> → <strong>Location</strong>.','Select <strong>Allow</strong>.','Refresh and try again.'];
+  if (b==='chrome')  return ['Click the 🔒 <strong>lock icon</strong> in your browser address bar.','Click <strong>Site settings</strong>.','Find <strong>Location</strong> → change it to <strong>Allow</strong>.','Refresh this page, then click Allow Location again.'];
+  if (b==='firefox') return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click the arrow next to <strong>Connection Secure</strong>.','Click <strong>More Information</strong> → open the <strong>Permissions</strong> tab.','Find <strong>Access Your Location</strong> → set to <strong>Allow</strong>.','Refresh this page and try again.'];
+  if (b==='safari')  return ['In the menu bar go to <strong>Safari → Settings for This Website</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
+  if (b==='edge')    return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click <strong>Permissions for this site</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
+  if (b==='ios')     return ['Open <strong>Settings</strong> on your iPhone/iPad.','Scroll down and tap <strong>Safari</strong> (or your browser app).','Tap <strong>Location</strong> → select <strong>Allow</strong>.','Return to this page and try again.'];
+  if (b==='android') return ['Tap the 🔒 <strong>lock icon</strong> in your browser address bar.','Tap <strong>Permissions</strong> → <strong>Location</strong>.','Select <strong>Allow</strong>.','Refresh and try again.'];
   return ['Open your browser settings → Site Permissions → Location.','Allow location for this site, then refresh and try again.'];
 }
 
-/* ══════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    MODAL OPEN / CLOSE
-══════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 function openLocationModal(e) {
   if (e) e.preventDefault();
   if (locationCaptured) {
@@ -572,25 +722,18 @@ function openLocationModal(e) {
 }
 
 function handleSubmit(e) {
-  if (!locationCaptured) {
-    e.preventDefault();
-    openLocationModal(e);
-  } else {
-    alert('Application submitted successfully! You will receive a confirmation email within 24 hours.');
-  }
+  if (!locationCaptured) { e.preventDefault(); openLocationModal(e); }
+  else { alert('Application submitted successfully! You will receive a confirmation email within 24 hours.'); }
 }
 
 function closeModalAndProceed() {
   document.getElementById('loc-overlay').classList.remove('active');
-  setTimeout(function() {
-    document.getElementById('apply').scrollIntoView({behavior:'smooth'});
-  }, 300);
+  setTimeout(function() { document.getElementById('apply').scrollIntoView({behavior:'smooth'}); }, 300);
 }
 
 function setStatus(msg, cls) {
   var el = document.getElementById('loc-modal-status');
-  el.innerHTML = msg;
-  el.className = cls || '';
+  el.innerHTML = msg; el.className = cls || '';
 }
 
 function unlockForm(summary) {
@@ -598,22 +741,20 @@ function unlockForm(summary) {
   btn.disabled = false;
   btn.textContent = 'Submit Application →';
   document.getElementById('submit-hint').style.display = 'none';
-
   var badge = document.getElementById('loc-verified-badge');
   badge.style.display = 'block';
   document.getElementById('badge-address').textContent = summary;
 }
 
-/* ══════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    MAIN LOCATION FLOW
-══════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 function startLocation() {
   var btn       = document.getElementById('loc-modal-btn');
   var deniedBox = document.getElementById('denied-box');
   var retryBtn  = document.getElementById('retry-btn');
   var addrBox   = document.getElementById('modal-address-box');
 
-  // Reset
   deniedBox.style.display = 'none';
   retryBtn.style.display  = 'none';
   addrBox.style.display   = 'none';
@@ -623,9 +764,7 @@ function startLocation() {
   setStatus('Please wait — verifying your location...', 'status-loading');
 
   if (!navigator.geolocation) {
-    btn.disabled = false;
-    btn.textContent = 'Allow Location & Continue';
-    setStatus('', '');
+    btn.disabled = false; btn.textContent = 'Allow Location & Continue'; setStatus('','');
     deniedBox.style.display = 'block';
     document.getElementById('denied-steps').innerHTML =
       '<li>Your browser does not support geolocation. Please try Google Chrome or Firefox.</li>';
@@ -639,38 +778,23 @@ function startLocation() {
       capturedLon = position.coords.longitude;
       var accuracy = position.coords.accuracy;
 
-      setStatus('📍 GPS detected! Resolving your full address...', 'status-loading');
-
-      /* Nominatim reverse geocode with zoom=18 for max detail */
-      var url = 'https://nominatim.openstreetmap.org/reverse'
-              + '?lat=' + capturedLat
-              + '&lon=' + capturedLon
-              + '&format=json'
-              + '&addressdetails=1'
-              + '&zoom=18'
-              + '&accept-language=en';
-
-      fetch(url, { headers: { 'Accept-Language': 'en' } })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var parsed     = parseAddress(data);
+      deepResolveAddress(capturedLat, capturedLon)
+        .then(function(parsed) {
           capturedAddrObj = parsed;
           capturedAddress = buildBadgeSummary(parsed, capturedLat, capturedLon);
 
           renderAddressCard(parsed, capturedLat, capturedLon, accuracy);
-
           locationCaptured = true;
 
-          /* ── Log full structured data ── */
           console.log('=== VISITOR LOCATION CAPTURED ===');
-          console.log('Street / Road    :', parsed.street   || '(none)');
-          console.log('Neighbourhood    :', parsed.area     || '(none)');
-          console.log('District / County:', parsed.district || '(none)');
-          console.log('City / Town      :', parsed.city     || '(none)');
-          console.log('State / Region   :', parsed.state    || '(none)');
-          console.log('Postcode / ZIP   :', parsed.postcode || '(none)');
-          console.log('Country          :', parsed.country  || '(none)');
-          console.log('Full Display Name:', parsed.displayName);
+          console.log('Street / Road    :', parsed.street      || '(none)');
+          console.log('Neighbourhood    :', parsed.area        || '(none)');
+          console.log('District / County:', parsed.district    || '(none)');
+          console.log('City / Town      :', parsed.city        || '(none)');
+          console.log('State / Region   :', parsed.state       || '(none)');
+          console.log('Postcode / ZIP   :', parsed.postcode    || '(none)');
+          console.log('Country          :', parsed.country     || '(none)');
+          console.log('Full Display Name:', parsed.displayName || '(none)');
           console.log('Latitude         :', capturedLat);
           console.log('Longitude        :', capturedLon);
           console.log('Accuracy         :', Math.round(accuracy) + 'm');
@@ -679,21 +803,15 @@ function startLocation() {
           btn.textContent = '✅ Verified — Proceeding to Application...';
           setStatus('✅ Location confirmed successfully!', 'status-success');
           unlockForm(capturedAddress);
-
           setTimeout(function() { closeModalAndProceed(); }, 2400);
         })
         .catch(function() {
-          /* Geocode API failed — fall back to coords only */
-          capturedAddress = capturedLat.toFixed(6) + ', ' + capturedLon.toFixed(6);
+          capturedAddress  = capturedLat.toFixed(6) + ', ' + capturedLon.toFixed(6);
           locationCaptured = true;
-
-          /* Show coords in card with "Not available" for text fields */
-          renderAddressCard({ street:'', area:'', district:'', city:'', state:'', postcode:'', country:'' },
+          renderAddressCard({ street:'',area:'',district:'',city:'',state:'',postcode:'',country:'' },
                             capturedLat, capturedLon, accuracy);
-
           console.log('=== VISITOR LOCATION (coords only) ===');
           console.log('Lat:', capturedLat, '| Lon:', capturedLon, '| Accuracy:', Math.round(accuracy)+'m');
-
           btn.textContent = '✅ Coordinates Verified — Proceeding...';
           setStatus('✅ Coordinates confirmed (address lookup unavailable).', 'status-success');
           unlockForm(capturedAddress);
@@ -703,21 +821,13 @@ function startLocation() {
 
     /* ── ERROR ── */
     function(error) {
-      btn.disabled    = false;
-      btn.textContent = 'Allow Location & Continue';
-
+      btn.disabled = false; btn.textContent = 'Allow Location & Continue';
       if (error.code === 1) {
         setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:', 'status-denied');
         var steps = getDeniedSteps();
-        var ol = document.getElementById('denied-steps');
-        ol.innerHTML = '';
-        steps.forEach(function(s) {
-          var li = document.createElement('li');
-          li.innerHTML = s;
-          ol.appendChild(li);
-        });
-        deniedBox.style.display = 'block';
-        retryBtn.style.display  = 'block';
+        var ol = document.getElementById('denied-steps'); ol.innerHTML = '';
+        steps.forEach(function(s) { var li = document.createElement('li'); li.innerHTML = s; ol.appendChild(li); });
+        deniedBox.style.display = 'block'; retryBtn.style.display = 'block';
       } else if (error.code === 2) {
         setStatus('⚠️ Location signal unavailable. Check your device GPS and try again.', 'status-denied');
         retryBtn.style.display = 'block';

